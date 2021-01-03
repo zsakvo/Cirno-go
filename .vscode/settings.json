@@ -1,0 +1,7 @@
+{
+  "editor.defaultFormatter": "golang.go",
+  "go.lintTool": "golangci-lint",
+  "go.autocompleteUnimportedPackages": true,
+  "go.inferGopath": true,
+  "go.useCodeSnippetsOnFunctionSuggest": true
+}
