@@ -1,6 +1,8 @@
 package util
 
 import (
+	"errors"
+	"strings"
 	"time"
 
 	"../config"
@@ -12,6 +14,10 @@ var cfg structure.ConfigStruct
 
 func InitReq() {
 	cfg = config.Load()
+}
+
+func InitTmpReq() {
+	cfg = config.GetTmp()
 }
 
 func Get(url string, paras req.Param) ([]byte, error) {
@@ -42,5 +48,8 @@ func Get(url string, paras req.Param) ([]byte, error) {
 		return nil, err
 	}
 	res, err = Decode(r.String(), cfg.App.DefaultKey)
+	if !strings.Contains(string(res), "100000") {
+		err = errors.New(string(res))
+	}
 	return res, err
 }

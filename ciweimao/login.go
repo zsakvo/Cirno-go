@@ -11,6 +11,7 @@ import (
 )
 
 func Login() {
+	util.InitTmpReq()
 	var err error
 	var res []byte
 	var name string

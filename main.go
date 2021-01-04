@@ -14,7 +14,14 @@ import (
 func init() {
 	dir, _ := homedir.Dir()
 	expandedDir, _ := homedir.Expand(dir)
-	util.InitReq()
+	if !util.IsExist(expandedDir + "/Cirno/download") {
+		os.MkdirAll(expandedDir+"/Cirno/download", os.ModePerm)
+	}
+	if util.IsExist(expandedDir + "/Cirno/config.yaml") {
+		util.InitReq()
+	} else {
+		ciweimao.Login()
+	}
 }
 
 func main() {
