@@ -14,7 +14,10 @@ func InitReq() {
 	cfg = config.Load()
 }
 
-func Get(url string, paras req.Param) []byte {
+func Get(url string, paras req.Param) ([]byte, error) {
+	var err error
+	var r *req.Resp
+	var res []byte
 	var param req.Param
 	if url == "/signup/login" {
 		param = req.Param{
@@ -34,7 +37,10 @@ func Get(url string, paras req.Param) []byte {
 	}
 	client := req.New()
 	client.SetTimeout(20 * time.Second)
-	r, _ := client.Get("https://app.hbooker.com"+url, param, req.Header{"User-Agent": cfg.App.UserAgent})
-	res := Decode(r.String(), cfg.App.DefaultKey)
-	return res
+	r, err = client.Get("https://app.hbooker.com"+url, param, req.Header{"User-Agent": cfg.App.UserAgent})
+	if err != nil {
+		return nil, err
+	}
+	res, err = Decode(r.String(), cfg.App.DefaultKey)
+	return res, err
 }

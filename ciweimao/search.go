@@ -2,7 +2,6 @@ package ciweimao
 
 import (
 	"fmt"
-	"log"
 
 	"../structure"
 	"../util"
@@ -11,19 +10,20 @@ import (
 )
 
 func Search(bookName string, page int) {
+	var err error
+	var res []byte
 	paras := req.Param{
 		"count":          10,
 		"page":           page,
 		"category_index": 0,
 		"key":            bookName,
 	}
-	res := util.Get("/bookcity/get_filter_search_book_list", paras)
+	res, err = util.Get("/bookcity/get_filter_search_book_list", paras)
+	util.PanicErr(err)
 	var json = jsoniter.ConfigCompatibleWithStandardLibrary
 	var result structure.SearchStruct
-	err := json.Unmarshal(res, &result)
-	if err != nil {
-		log.Fatalln(err)
-	}
+	err = json.Unmarshal(res, &result)
+	util.PanicErr(err)
 	bookList := result.Data.BookList
 	for i, book := range bookList {
 		fmt.Println(i, "-", book.BookName, "-", book.BookID)

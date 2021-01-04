@@ -55,14 +55,16 @@ func PKCS7UnPadding(plainText []byte) []byte {
 }
 
 //Decode 入口函数
-func Decode(str string, EncryptKey string) []byte {
-	decoded, err := Base64Decode(str)
+func Decode(str string, EncryptKey string) ([]byte, error) {
+	var err error
+	var decoded, raw []byte
+	decoded, err = Base64Decode(str)
 	if err != nil {
 		panic(err)
 	}
-	raw, err1 := AESDecrypt(EncryptKey, decoded)
-	if err1 != nil {
+	raw, err = AESDecrypt(EncryptKey, decoded)
+	if err != nil {
 		panic(err)
 	}
-	return raw
+	return raw, err
 }

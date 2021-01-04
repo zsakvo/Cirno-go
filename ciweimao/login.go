@@ -2,7 +2,6 @@ package ciweimao
 
 import (
 	"fmt"
-	"log"
 
 	"../config"
 	"../structure"
@@ -12,6 +11,8 @@ import (
 )
 
 func Login() {
+	var err error
+	var res []byte
 	var name string
 	var passwd string
 	fmt.Printf("账户: ")
@@ -22,12 +23,13 @@ func Login() {
 		"login_name": name,
 		"passwd":     passwd,
 	}
-	res := util.Get("/signup/login", paras)
+	res, err = util.Get("/signup/login", paras)
+	util.PanicErr(err)
 	var json = jsoniter.ConfigCompatibleWithStandardLibrary
 	var result structure.LoginStruct
-	err := json.Unmarshal(res, &result)
+	err = json.Unmarshal(res, &result)
 	if err != nil {
-		log.Fatalln(err)
+		panic(err)
 	} else {
 		config.Write(name, passwd, result.Data.LoginToken, result.Data.ReaderInfo.Account)
 	}

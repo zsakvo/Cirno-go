@@ -10,21 +10,44 @@ import (
 	"github.com/cheggaaa/pb"
 )
 
+var errList []structure.ChapterList
+var bar *pb.ProgressBar
+var chapterInfos []structure.ChapterInfo
+
 func DownloadText(bid string) {
-	var chapterInfos []structure.ChapterInfo
 	detail := ciweimao.GetDetail(bid)
 	name := detail.BookName
 	chapters := ciweimao.GetCatalog(bid)
 	totalCount := len(chapters)
 	fmt.Println("开始下载", "《"+name+"》")
-	bar := pb.StartNew(totalCount)
+	bar = pb.StartNew(totalCount)
 	for _, chapter := range chapters {
-		chapterInfos = append(chapterInfos, ciweimao.GetContent(chapter.ChapterID))
-		bar.Increment()
+		chapterInfo, err := ciweimao.GetContent(chapter.ChapterID)
+		if err != nil {
+			errList = append(errList, chapter)
+		} else {
+			chapterInfos = append(chapterInfos, chapterInfo)
+			bar.Increment()
+		}
+	}
+	for len(errList) > 0 {
+		dealErr()
 	}
 	writeText(name, chapterInfos)
 	bar.Finish()
 	fmt.Println("下载成功！")
+}
+
+func dealErr() {
+	for _, chapter := range errList {
+		chapterInfo, err := ciweimao.GetContent(chapter.ChapterID)
+		if err != nil {
+			errList = append(errList, chapter)
+		} else {
+			chapterInfos = append(chapterInfos, chapterInfo)
+			bar.Increment()
+		}
+	}
 }
 
 func writeText(bookName string, chapterInfos []structure.ChapterInfo) {

@@ -1,8 +1,6 @@
 package ciweimao
 
 import (
-	"log"
-
 	"../structure"
 	"../util"
 	"github.com/imroc/req"
@@ -24,29 +22,31 @@ func GetCatalog(bid string) []structure.ChapterList {
 }
 
 func getDivision(bid string) []structure.DivisionList {
+	var err error
+	var res []byte
 	paras := req.Param{
 		"book_id": bid,
 	}
-	res := util.Get("/book/get_division_list", paras)
+	res, err = util.Get("/book/get_division_list", paras)
+	util.PanicErr(err)
 	var json = jsoniter.ConfigCompatibleWithStandardLibrary
 	var result structure.DivisionStruct
-	err := json.Unmarshal(res, &result)
-	if err != nil {
-		log.Fatalln(err)
-	}
+	err = json.Unmarshal(res, &result)
+	util.PanicErr(err)
 	return result.Data.DivisionList
 }
 
 func getChapters(did string) []structure.ChapterList {
+	var err error
+	var res []byte
 	paras := req.Param{
 		"division_id": did,
 	}
-	res := util.Get("/chapter/get_updated_chapter_by_division_id", paras)
+	res, err = util.Get("/chapter/get_updated_chapter_by_division_id", paras)
+	util.PanicErr(err)
 	var json = jsoniter.ConfigCompatibleWithStandardLibrary
 	var result structure.ChapterStruct
-	err := json.Unmarshal(res, &result)
-	if err != nil {
-		log.Fatalln(err)
-	}
+	err = json.Unmarshal(res, &result)
+	util.PanicErr(err)
 	return result.Data.ChapterList
 }
