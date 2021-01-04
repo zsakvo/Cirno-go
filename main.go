@@ -7,10 +7,13 @@ import (
 	"./ciweimao"
 	"./fetch"
 	"./util"
+	"github.com/mitchellh/go-homedir"
 	"github.com/urfave/cli"
 )
 
 func init() {
+	dir, _ := homedir.Dir()
+	expandedDir, _ := homedir.Expand(dir)
 	util.InitReq()
 }
 

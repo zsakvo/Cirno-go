@@ -25,7 +25,26 @@ func Load() structure.ConfigStruct {
 			log.Fatalf("unable to decode into struct, %v", err)
 		}
 	} else {
-		println("参数文件不存在，已为您初始化，请填写账户密码后登入")
+		// println("参数文件不存在，已为您初始化，请填写账户密码后登入")
+		// file, err := os.Create("./config.yaml")
+		// if err != nil {
+		// 	fmt.Println(err.Error())
+		// }
+		// defer file.Close()
+		// viper.SetConfigName("config")
+		// viper.AddConfigPath(".")
+		// viper.SetConfigType("yaml")
+		// viper.SetDefault("app.user_name", "")
+		// viper.SetDefault("app.password", "")
+		// viper.SetDefault("app.app_version", "2.7.017")
+		// viper.SetDefault("app.device_token", "ciweimao_client")
+		// viper.SetDefault("app.user_agent", "Android com.kuangxiangciweimao.novel")
+		// viper.SetDefault("app.default_key", "zG2nSeEfSHfvTCHy5LCcqtBbQehKNLXn")
+		// err = viper.WriteConfig()
+		// if err != nil {
+		// 	log.Fatalln(err)
+		// }
+		println("貌似您还没有登录，请先使用 cirno login 命令登陆后再操作")
 		file, err := os.Create("./config.yaml")
 		if err != nil {
 			fmt.Println(err.Error())
