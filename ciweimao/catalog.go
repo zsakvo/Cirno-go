@@ -1,7 +1,7 @@
 package ciweimao
 
 import (
-	"fmt"
+	"log"
 
 	"../snipaste"
 	"../structure"
@@ -10,20 +10,18 @@ import (
 	jsoniter "github.com/json-iterator/go"
 )
 
-func GetCatalog(bid string, config structure.ConfigStruct) []structure.ChapterList {
-	var chapterList []structure.ChapterList
+func GetCatalog(bid string, config structure.ConfigStruct) []structure.ChapterInfo {
+	var ChapterInfoList []structure.ChapterInfo
 	divisions := getDivision(bid, config)
 	for _, division := range divisions {
 		chapters := getChapters(division.DivisionID, config)
 		for _, chapter := range chapters {
-			fmt.Println(chapter)
-			chapterList = append(chapterList, chapter)
-			GetContent(chapter.ChapterID, config)
-			return nil
+			if chapter.IsValid == "1" {
+				ChapterInfoList = append(ChapterInfoList, GetContent(chapter.ChapterID, config))
+			}
 		}
 	}
-	// fmt.Println(len(chapterList))
-	return chapterList
+	return ChapterInfoList
 }
 
 func getDivision(bid string, config structure.ConfigStruct) []structure.DivisionList {
@@ -38,7 +36,10 @@ func getDivision(bid string, config structure.ConfigStruct) []structure.Division
 	res := util.Decode(r.String(), snipaste.InitEncryptKey)
 	var json = jsoniter.ConfigCompatibleWithStandardLibrary
 	var result structure.DivisionStruct
-	json.Unmarshal(res, &result)
+	err := json.Unmarshal(res, &result)
+	if err != nil {
+		log.Fatalln(err)
+	}
 	return result.Data.DivisionList
 }
 
@@ -52,8 +53,12 @@ func getChapters(did string, config structure.ConfigStruct) []structure.ChapterL
 	}
 	r, _ := req.Get("https://app.hbooker.com/chapter/get_updated_chapter_by_division_id", param)
 	res := util.Decode(r.String(), snipaste.InitEncryptKey)
+	// fmt.Println(string(res))
 	var json = jsoniter.ConfigCompatibleWithStandardLibrary
 	var result structure.ChapterStruct
-	json.Unmarshal(res, &result)
+	err := json.Unmarshal(res, &result)
+	if err != nil {
+		log.Fatalln(err)
+	}
 	return result.Data.ChapterList
 }

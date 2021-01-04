@@ -2,6 +2,7 @@ package ciweimao
 
 import (
 	"fmt"
+	"log"
 
 	"../snipaste"
 	"../structure"
@@ -25,7 +26,10 @@ func Search(bookName string, page int, config structure.ConfigStruct) {
 	res := util.Decode(r.String(), snipaste.InitEncryptKey)
 	var json = jsoniter.ConfigCompatibleWithStandardLibrary
 	var result structure.SearchStruct
-	json.Unmarshal(res, &result)
+	err := json.Unmarshal(res, &result)
+	if err != nil {
+		log.Fatalln(err)
+	}
 	bookList := result.Data.BookList
 	for i, book := range bookList {
 		fmt.Println(i, "-", book.BookName, "-", book.BookID)

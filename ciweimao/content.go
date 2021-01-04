@@ -1,6 +1,9 @@
 package ciweimao
 
 import (
+	"fmt"
+	"log"
+
 	"../snipaste"
 	"../structure"
 	"../util"
@@ -11,13 +14,11 @@ import (
 var appConfig structure.ConfigStruct
 var chapterId string
 
-func GetContent(cid string, cfg structure.ConfigStruct) {
+func GetContent(cid string, cfg structure.ConfigStruct) structure.ChapterInfo {
 	chapterId = cid
 	appConfig = cfg
 	key := getKey()
-	eTxt := getEncryptText(key)
-	dTxt := string(util.Decode(eTxt, key))
-	println(dTxt)
+	return getDecrypt(key)
 }
 
 func getKey() string {
@@ -32,12 +33,14 @@ func getKey() string {
 	res := util.Decode(r.String(), snipaste.InitEncryptKey)
 	var json = jsoniter.ConfigCompatibleWithStandardLibrary
 	var result structure.KeyStruct
-	json.Unmarshal(res, &result)
-	println(result.Data.Command)
+	err := json.Unmarshal(res, &result)
+	if err != nil {
+		log.Fatalln(err)
+	}
 	return result.Data.Command
 }
 
-func getEncryptText(key string) string {
+func getDecrypt(key string) structure.ChapterInfo {
 	param := req.Param{
 		"chapter_id":      chapterId,
 		"chapter_command": key,
@@ -48,9 +51,15 @@ func getEncryptText(key string) string {
 	}
 	r, _ := req.Get("https://app.hbooker.com/chapter/get_cpt_ifm", param)
 	res := util.Decode(r.String(), snipaste.InitEncryptKey)
+	if chapterId == "102839480" {
+		fmt.Println(string(res))
+	}
 	var json = jsoniter.ConfigCompatibleWithStandardLibrary
 	var result structure.ContentStruct
-	json.Unmarshal(res, &result)
-	// print(result.Data.ChapterInfo.TxtContent)
-	return result.Data.ChapterInfo.TxtContent
+	err := json.Unmarshal(res, &result)
+	if err != nil {
+		log.Fatalln(err)
+	}
+	result.Data.ChapterInfo.TxtContent = string(util.Decode(result.Data.ChapterInfo.TxtContent, key))
+	return result.Data.ChapterInfo
 }

@@ -1,7 +1,7 @@
 package ciweimao
 
 import (
-	"fmt"
+	"log"
 
 	"../config"
 	"../snipaste"
@@ -18,12 +18,14 @@ func Login(c structure.ConfigStruct) {
 		"login_name":   c.App.UserName,
 		"passwd":       c.App.Password,
 	}
-	r, _ := req.Get("https://app.hbooker.com/signup/login", param)
+	r, _ := req.Get("https://app.hbooker.com/signup/login", param, req.Header{"User-Agent": c.App.UserAgent})
 	res := util.Decode(r.String(), snipaste.InitEncryptKey)
 	var json = jsoniter.ConfigCompatibleWithStandardLibrary
 	var result structure.LoginStruct
-	json.Unmarshal(res, &result)
-	fmt.Println(result.Data.LoginToken)
-	fmt.Println(result.Data.ReaderInfo.Account)
-	config.Write(result.Data.LoginToken, result.Data.ReaderInfo.Account)
+	err := json.Unmarshal(res, &result)
+	if err != nil {
+		log.Fatalln(err)
+	} else {
+		config.Write(result.Data.LoginToken, result.Data.ReaderInfo.Account)
+	}
 }

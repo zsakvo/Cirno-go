@@ -6,32 +6,28 @@ import (
 
 	"./ciweimao"
 	"./config"
+	"./fetch"
 	"./structure"
 	"github.com/urfave/cli"
 )
 
-// func init(){
-
-// }
-
 var AppConfig structure.ConfigStruct
 
+func init() {
+	AppConfig = config.Load()
+}
+
 func main() {
-	config := config.Load()
-	AppConfig = config
 	app := &cli.App{
 		Action: func(c *cli.Context) error {
 			var args = c.Args()
 			switch args.Get(0) {
 			case "login":
-				ciweimao.Login(config)
-				break
+				ciweimao.Login(AppConfig)
 			case "search":
-				ciweimao.Search(args.Get(1), 0, config)
-				break
+				ciweimao.Search(args.Get(1), 0, AppConfig)
 			case "download":
-				ciweimao.GetCatalog(args.Get(1), config)
-				break
+				fetch.DownloadText(args.Get(1), AppConfig)
 			}
 			return nil
 		},

@@ -53,4 +53,5 @@ Temporary Items
 .history/
 
 bin/*
+download/*
 config.yaml
