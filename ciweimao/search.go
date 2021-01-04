@@ -10,7 +10,7 @@ import (
 	jsoniter "github.com/json-iterator/go"
 )
 
-func Search(bookName string, page int, config structure.ConfigStruct) {
+func Search(bookName string, page int) {
 	paras := req.Param{
 		"count":          10,
 		"page":           page,

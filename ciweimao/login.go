@@ -1,6 +1,7 @@
 package ciweimao
 
 import (
+	"fmt"
 	"log"
 
 	"../config"
@@ -10,10 +11,16 @@ import (
 	jsoniter "github.com/json-iterator/go"
 )
 
-func Login(c structure.ConfigStruct) {
+func Login() {
+	var name string
+	var passwd string
+	fmt.Printf("账户: ")
+	fmt.Scanln(&name)
+	fmt.Printf("密码: ")
+	fmt.Scanln(&passwd)
 	paras := req.Param{
-		"login_name": c.App.UserName,
-		"passwd":     c.App.Password,
+		"login_name": name,
+		"passwd":     passwd,
 	}
 	res := util.Get("/signup/login", paras)
 	var json = jsoniter.ConfigCompatibleWithStandardLibrary
@@ -22,6 +29,6 @@ func Login(c structure.ConfigStruct) {
 	if err != nil {
 		log.Fatalln(err)
 	} else {
-		config.Write(result.Data.LoginToken, result.Data.ReaderInfo.Account)
+		config.Write(name, passwd, result.Data.LoginToken, result.Data.ReaderInfo.Account)
 	}
 }

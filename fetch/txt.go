@@ -10,13 +10,13 @@ import (
 	"github.com/cheggaaa/pb"
 )
 
-func DownloadText(bid string, config structure.ConfigStruct) {
+func DownloadText(bid string) {
 	var chapterInfos []structure.ChapterInfo
 	detail := ciweimao.GetDetail(bid)
 	name := detail.BookName
 	chapters := ciweimao.GetCatalog(bid)
 	totalCount := len(chapters)
-	fmt.Println("开始下载", name)
+	fmt.Println("开始下载", "《"+name+"》")
 	bar := pb.StartNew(totalCount)
 	for _, chapter := range chapters {
 		chapterInfos = append(chapterInfos, ciweimao.GetContent(chapter.ChapterID))

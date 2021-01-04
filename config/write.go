@@ -7,7 +7,7 @@ import (
 	"github.com/spf13/viper"
 )
 
-func Write(token, account string) {
+func Write(name, password, token, account string) {
 	viper.SetConfigName("config")
 	viper.AddConfigPath(".")
 	viper.SetConfigType("yaml")
@@ -18,10 +18,12 @@ func Write(token, account string) {
 	}
 	viper.Set("app.login_token", token)
 	viper.Set("app.account", account)
+	viper.Set("app.user_name", name)
+	viper.Set("app.password", password)
 	err1 := viper.WriteConfig()
 	if err1 != nil {
 		fmt.Printf("writeout config file error: %s\n", err1)
 		os.Exit(1)
 	}
-	fmt.Println("配置写出成功！")
+	fmt.Println("登陆成功，可以开始使用了")
 }

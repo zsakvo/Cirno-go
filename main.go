@@ -5,17 +5,12 @@ import (
 	"os"
 
 	"./ciweimao"
-	"./config"
 	"./fetch"
-	"./structure"
 	"./util"
 	"github.com/urfave/cli"
 )
 
-var AppConfig structure.ConfigStruct
-
 func init() {
-	AppConfig = config.Load()
 	util.InitReq()
 }
 
@@ -27,11 +22,11 @@ func main() {
 			case "demo":
 				ciweimao.Demo()
 			case "login":
-				ciweimao.Login(AppConfig)
+				ciweimao.Login()
 			case "search":
-				ciweimao.Search(args.Get(1), 0, AppConfig)
+				ciweimao.Search(args.Get(1), 0)
 			case "download":
-				fetch.DownloadText(args.Get(1), AppConfig)
+				fetch.DownloadText(args.Get(1))
 			}
 			return nil
 		},
