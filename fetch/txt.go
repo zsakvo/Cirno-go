@@ -8,6 +8,7 @@ import (
 	"../ciweimao"
 	"../structure"
 	"github.com/cheggaaa/pb"
+	"github.com/mitchellh/go-homedir"
 )
 
 var errList []structure.ChapterList
@@ -51,8 +52,10 @@ func dealErr() {
 }
 
 func writeText(bookName string, chapterInfos []structure.ChapterInfo) {
+	dir, _ := homedir.Dir()
+	expandedDir, _ := homedir.Expand(dir)
 	bookText := initText(chapterInfos)
-	fileName := "./download/" + bookName + ".txt"
+	fileName := expandedDir + "/Cirno/download/" + bookName + ".txt"
 	if isExist(fileName) {
 		os.Remove(fileName)
 	}
