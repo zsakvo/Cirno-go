@@ -1,7 +1,7 @@
 package structure
 
 type SearchStruct struct {
-	Code int64      `json:"code"`
+	Code string     `json:"code"`
 	Data SearchData `json:"data"`
 }
 
@@ -21,7 +21,7 @@ type BookList struct {
 	UpStatus        string                `json:"up_status"`
 	UpdateStatus    string                `json:"update_status"`
 	IsPaid          string                `json:"is_paid"`
-	Discount        int64                 `json:"discount"`
+	Discount        string                `json:"discount"`
 	DiscountEndTime string                `json:"discount_end_time"`
 	Cover           string                `json:"cover"`
 	AuthorName      string                `json:"author_name"`
@@ -30,12 +30,12 @@ type BookList struct {
 	ReviewAmount    string                `json:"review_amount"`
 	RewardAmount    string                `json:"reward_amount"`
 	ChapterAmount   string                `json:"chapter_amount"`
-	IsOriginal      int64                 `json:"is_original"`
-	TotalClick      int64                 `json:"total_click"`
-	MonthClick      int64                 `json:"month_click"`
-	WeekClick       int64                 `json:"week_click"`
-	MonthNoVipClick int64                 `json:"month_no_vip_click"`
-	WeekNoVipClick  int64                 `json:"week_no_vip_click"`
+	IsOriginal      string                `json:"is_original"`
+	TotalClick      string                `json:"total_click"`
+	MonthClick      string                `json:"month_click"`
+	WeekClick       string                `json:"week_click"`
+	MonthNoVipClick string                `json:"month_no_vip_click"`
+	WeekNoVipClick  string                `json:"week_no_vip_click"`
 	TotalRecommend  string                `json:"total_recommend"`
 	MonthRecommend  string                `json:"month_recommend"`
 	WeekRecommend   string                `json:"week_recommend"`
@@ -66,5 +66,5 @@ type SearchLastChapterInfo struct {
 
 type SearchTagList struct {
 	TagName string `json:"tag_name"`
-	Num     int64  `json:"num"`
+	Num     string `json:"num"`
 }

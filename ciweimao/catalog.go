@@ -3,37 +3,31 @@ package ciweimao
 import (
 	"log"
 
-	"../snipaste"
 	"../structure"
 	"../util"
 	"github.com/imroc/req"
 	jsoniter "github.com/json-iterator/go"
 )
 
-func GetCatalog(bid string, config structure.ConfigStruct) []structure.ChapterInfo {
-	var ChapterInfoList []structure.ChapterInfo
-	divisions := getDivision(bid, config)
+func GetCatalog(bid string) []structure.ChapterList {
+	var chapterList []structure.ChapterList
+	divisions := getDivision(bid)
 	for _, division := range divisions {
-		chapters := getChapters(division.DivisionID, config)
+		chapters := getChapters(division.DivisionID)
 		for _, chapter := range chapters {
 			if chapter.IsValid == "1" {
-				ChapterInfoList = append(ChapterInfoList, GetContent(chapter.ChapterID, config))
+				chapterList = append(chapterList, chapter)
 			}
 		}
 	}
-	return ChapterInfoList
+	return chapterList
 }
 
-func getDivision(bid string, config structure.ConfigStruct) []structure.DivisionList {
-	param := req.Param{
-		"book_id":      bid,
-		"account":      config.App.Account,
-		"device_token": config.App.DeviceToken,
-		"app_version":  config.App.AppVersion,
-		"login_token":  config.App.LoginToken,
+func getDivision(bid string) []structure.DivisionList {
+	paras := req.Param{
+		"book_id": bid,
 	}
-	r, _ := req.Get("https://app.hbooker.com/book/get_division_list", param)
-	res := util.Decode(r.String(), snipaste.InitEncryptKey)
+	res := util.Get("/book/get_division_list", paras, nil)
 	var json = jsoniter.ConfigCompatibleWithStandardLibrary
 	var result structure.DivisionStruct
 	err := json.Unmarshal(res, &result)
@@ -43,17 +37,11 @@ func getDivision(bid string, config structure.ConfigStruct) []structure.Division
 	return result.Data.DivisionList
 }
 
-func getChapters(did string, config structure.ConfigStruct) []structure.ChapterList {
-	param := req.Param{
-		"division_id":  did,
-		"account":      config.App.Account,
-		"device_token": config.App.DeviceToken,
-		"app_version":  config.App.AppVersion,
-		"login_token":  config.App.LoginToken,
+func getChapters(did string) []structure.ChapterList {
+	paras := req.Param{
+		"division_id": did,
 	}
-	r, _ := req.Get("https://app.hbooker.com/chapter/get_updated_chapter_by_division_id", param)
-	res := util.Decode(r.String(), snipaste.InitEncryptKey)
-	// fmt.Println(string(res))
+	res := util.Get("/chapter/get_updated_chapter_by_division_id", paras, nil)
 	var json = jsoniter.ConfigCompatibleWithStandardLibrary
 	var result structure.ChapterStruct
 	err := json.Unmarshal(res, &result)

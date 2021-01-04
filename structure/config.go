@@ -13,6 +13,7 @@ type App struct {
 	DeviceToken string `mapstructure:"device_token"`
 	AppVersion  string `mapstructure:"app_version"`
 	UserAgent   string `mapstructure:"user_agent"`
+	DefaultKey  string `mapstructure:"default_key"`
 }
 
 type Web struct {

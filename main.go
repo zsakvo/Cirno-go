@@ -8,6 +8,7 @@ import (
 	"./config"
 	"./fetch"
 	"./structure"
+	"./util"
 	"github.com/urfave/cli"
 )
 
@@ -15,6 +16,7 @@ var AppConfig structure.ConfigStruct
 
 func init() {
 	AppConfig = config.Load()
+	util.InitReq()
 }
 
 func main() {
@@ -22,6 +24,8 @@ func main() {
 		Action: func(c *cli.Context) error {
 			var args = c.Args()
 			switch args.Get(0) {
+			case "demo":
+				ciweimao.Demo()
 			case "login":
 				ciweimao.Login(AppConfig)
 			case "search":

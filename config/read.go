@@ -39,6 +39,7 @@ func Load() structure.ConfigStruct {
 		viper.SetDefault("app.app_version", "2.7.017")
 		viper.SetDefault("app.device_token", "ciweimao_client")
 		viper.SetDefault("app.user_agent", "Android com.kuangxiangciweimao.novel")
+		viper.SetDefault("app.default_key", "zG2nSeEfSHfvTCHy5LCcqtBbQehKNLXn")
 		err = viper.WriteConfig()
 		if err != nil {
 			log.Fatalln(err)

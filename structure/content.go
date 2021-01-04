@@ -1,7 +1,7 @@
 package structure
 
 type ContentStruct struct {
-	Code int64       `json:"code"`
+	Code string      `json:"code"`
 	Data ContentData `json:"data"`
 }
 
@@ -13,14 +13,14 @@ type ChapterInfo struct {
 	ChapterID         string `json:"chapter_id"`
 	BookID            string `json:"book_id"`
 	DivisionID        string `json:"division_id"`
-	UnitHlb           int64  `json:"unit_hlb"`
+	UnitHlb           string `json:"unit_hlb"`
 	ChapterIndex      string `json:"chapter_index"`
 	ChapterTitle      string `json:"chapter_title"`
 	AuthorSay         string `json:"author_say"`
 	WordCount         string `json:"word_count"`
 	Discount          string `json:"discount"`
 	IsPaid            string `json:"is_paid"`
-	AuthAccess        int64  `json:"auth_access"`
+	AuthAccess        string `json:"auth_access"`
 	BuyAmount         string `json:"buy_amount"`
 	TsukkomiAmount    string `json:"tsukkomi_amount"`
 	TotalHlb          string `json:"total_hlb"`

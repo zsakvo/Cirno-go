@@ -1,14 +1,14 @@
 package structure
 
 type ChapterStruct struct {
-	Code int64       `json:"code"`
+	Code string      `json:"code"`
 	Data ChapterData `json:"data"`
 }
 
 type ChapterData struct {
 	ChapterList     []ChapterList `json:"chapter_list"`
-	MaxUpdateTime   int64         `json:"max_update_time"`
-	MaxChapterIndex int64         `json:"max_chapter_index"`
+	MaxUpdateTime   string        `json:"max_update_time"`
+	MaxChapterIndex string        `json:"max_chapter_index"`
 }
 
 type ChapterList struct {
@@ -20,5 +20,5 @@ type ChapterList struct {
 	IsPaid         string `json:"is_paid"`
 	Mtime          string `json:"mtime"`
 	IsValid        string `json:"is_valid"`
-	AuthAccess     int64  `json:"auth_access"`
+	AuthAccess     string `json:"auth_access"`
 }

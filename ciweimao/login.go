@@ -4,7 +4,6 @@ import (
 	"log"
 
 	"../config"
-	"../snipaste"
 	"../structure"
 	"../util"
 	"github.com/imroc/req"
@@ -12,14 +11,11 @@ import (
 )
 
 func Login(c structure.ConfigStruct) {
-	param := req.Param{
-		"app_version":  c.App.AppVersion,
-		"device_token": c.App.DeviceToken,
-		"login_name":   c.App.UserName,
-		"passwd":       c.App.Password,
+	paras := req.Param{
+		"login_name": c.App.UserName,
+		"passwd":     c.App.Password,
 	}
-	r, _ := req.Get("https://app.hbooker.com/signup/login", param, req.Header{"User-Agent": c.App.UserAgent})
-	res := util.Decode(r.String(), snipaste.InitEncryptKey)
+	res := util.Get("/signup/login", paras, nil)
 	var json = jsoniter.ConfigCompatibleWithStandardLibrary
 	var result structure.LoginStruct
 	err := json.Unmarshal(res, &result)
