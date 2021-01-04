@@ -18,9 +18,11 @@ func GetCatalog(bid string, config structure.ConfigStruct) []structure.ChapterLi
 		for _, chapter := range chapters {
 			fmt.Println(chapter)
 			chapterList = append(chapterList, chapter)
+			GetContent(chapter.ChapterID, config)
+			return nil
 		}
 	}
-	fmt.Println(len(chapterList))
+	// fmt.Println(len(chapterList))
 	return chapterList
 }
 

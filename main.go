@@ -6,6 +6,7 @@ import (
 
 	"./ciweimao"
 	"./config"
+	"./structure"
 	"github.com/urfave/cli"
 )
 
@@ -13,8 +14,11 @@ import (
 
 // }
 
+var AppConfig structure.ConfigStruct
+
 func main() {
 	config := config.Load()
+	AppConfig = config
 	app := &cli.App{
 		Action: func(c *cli.Context) error {
 			var args = c.Args()
