@@ -17,7 +17,7 @@ func Search(bookName string, page int, config structure.ConfigStruct) {
 		"category_index": 0,
 		"key":            bookName,
 	}
-	res := util.Get("/bookcity/get_filter_search_book_list", paras, nil)
+	res := util.Get("/bookcity/get_filter_search_book_list", paras)
 	var json = jsoniter.ConfigCompatibleWithStandardLibrary
 	var result structure.SearchStruct
 	err := json.Unmarshal(res, &result)

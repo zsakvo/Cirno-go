@@ -14,7 +14,7 @@ func InitReq() {
 	cfg = config.Load()
 }
 
-func Get(url string, paras req.Param, key *string) []byte {
+func Get(url string, paras req.Param) []byte {
 	var param req.Param
 	if url == "/signup/login" {
 		param = req.Param{

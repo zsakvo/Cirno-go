@@ -27,7 +27,7 @@ func getDivision(bid string) []structure.DivisionList {
 	paras := req.Param{
 		"book_id": bid,
 	}
-	res := util.Get("/book/get_division_list", paras, nil)
+	res := util.Get("/book/get_division_list", paras)
 	var json = jsoniter.ConfigCompatibleWithStandardLibrary
 	var result structure.DivisionStruct
 	err := json.Unmarshal(res, &result)
@@ -41,7 +41,7 @@ func getChapters(did string) []structure.ChapterList {
 	paras := req.Param{
 		"division_id": did,
 	}
-	res := util.Get("/chapter/get_updated_chapter_by_division_id", paras, nil)
+	res := util.Get("/chapter/get_updated_chapter_by_division_id", paras)
 	var json = jsoniter.ConfigCompatibleWithStandardLibrary
 	var result structure.ChapterStruct
 	err := json.Unmarshal(res, &result)

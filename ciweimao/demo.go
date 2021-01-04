@@ -20,7 +20,7 @@ func Demo() {
 	para := req.Param{
 		"xxxx": "xxxx",
 	}
-	xx := util.Get("/xxxx", para, nil)
+	xx := util.Get("/xxxx", para)
 	fmt.Println(string(xx))
 	// fmt.Println(result.Data.LoginToken)
 	// fmt.Println(result.Data.ReaderInfo.Account)

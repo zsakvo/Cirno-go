@@ -15,7 +15,7 @@ func Login(c structure.ConfigStruct) {
 		"login_name": c.App.UserName,
 		"passwd":     c.App.Password,
 	}
-	res := util.Get("/signup/login", paras, nil)
+	res := util.Get("/signup/login", paras)
 	var json = jsoniter.ConfigCompatibleWithStandardLibrary
 	var result structure.LoginStruct
 	err := json.Unmarshal(res, &result)

@@ -21,7 +21,7 @@ func getKey() string {
 	paras := req.Param{
 		"chapter_id": chapterId,
 	}
-	res := util.Get("/chapter/get_chapter_cmd", paras, nil)
+	res := util.Get("/chapter/get_chapter_cmd", paras)
 	var json = jsoniter.ConfigCompatibleWithStandardLibrary
 	var result structure.KeyStruct
 	err := json.Unmarshal(res, &result)
@@ -36,7 +36,7 @@ func getDecrypt(key string) structure.ChapterInfo {
 		"chapter_id":      chapterId,
 		"chapter_command": key,
 	}
-	res := util.Get("/chapter/get_cpt_ifm", paras, nil)
+	res := util.Get("/chapter/get_cpt_ifm", paras)
 	var json = jsoniter.ConfigCompatibleWithStandardLibrary
 	var result structure.ContentStruct
 	err := json.Unmarshal(res, &result)

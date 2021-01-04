@@ -13,7 +13,7 @@ func GetDetail(bid string) structure.BookInfo {
 	paras := req.Param{
 		"book_id": bid,
 	}
-	res := util.Get("/book/get_info_by_id", paras, nil)
+	res := util.Get("/book/get_info_by_id", paras)
 	var json = jsoniter.ConfigCompatibleWithStandardLibrary
 	var result structure.DetailStruct
 	err := json.Unmarshal(res, &result)
