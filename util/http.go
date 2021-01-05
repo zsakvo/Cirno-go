@@ -49,7 +49,7 @@ func Get(url string, paras req.Param) ([]byte, error) {
 	}
 	res, err = Decode(r.String(), cfg.App.DefaultKey)
 	if !strings.Contains(string(res), "100000") {
-		err = errors.New(string(res))
+		err = errors.New(ErrTip(string(res)))
 	}
 	return res, err
 }
