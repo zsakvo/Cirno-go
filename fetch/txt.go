@@ -22,15 +22,17 @@ func DownloadText(bid string) {
 	totalCount := len(chapters)
 	fmt.Println("开始下载", "《"+name+"》")
 	bar = pb.StartNew(totalCount)
-	for _, chapter := range chapters {
-		chapterInfo, err := ciweimao.GetContent(chapter.ChapterID)
-		if err != nil {
-			errList = append(errList, chapter)
-		} else {
-			chapterInfos = append(chapterInfos, chapterInfo)
-			bar.Increment()
-		}
-	}
+	// for _, chapter := range chapters {
+	// 	chapterInfo, err := ciweimao.GetContent(chapter.ChapterID)
+	// 	if err != nil {
+	// 		errList = append(errList, chapter)
+	// 	} else {
+	// 		chapterInfos = append(chapterInfos, chapterInfo)
+	// 		bar.Increment()
+	// 	}
+	// }
+	var txts []string
+	go getChapterText(chapters, errList, txts)
 	for len(errList) > 0 {
 		dealErr()
 	}
@@ -88,4 +90,22 @@ func isExist(path string) bool {
 		return os.IsExist(err)
 	}
 	return true
+}
+
+func getChapterText(chapters, errs []structure.ChapterList, txts []string) {
+	for _, chapter := range chapters {
+		text := ""
+		chapterInfo, err := ciweimao.GetContent(chapter.ChapterID)
+		if err != nil {
+			errs = append(errs, chapter)
+		} else {
+			text += chapterInfo.ChapterTitle
+			text += "\n\n"
+			text += chapterInfo.TxtContent
+			text += chapterInfo.AuthorSay
+			text += "\n\n\n"
+			txts = append(txts, text)
+			bar.Increment()
+		}
+	}
 }
