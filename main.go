@@ -30,7 +30,16 @@ func init() {
 }
 
 func main() {
+	bookType := "txt"
 	app := &cli.App{
+		Flags: []cli.Flag{
+			&cli.StringFlag{
+				Name:        "type",
+				Value:       "txt",
+				Usage:       "set books type",
+				Destination: &bookType,
+			},
+		},
 		Action: func(c *cli.Context) error {
 			var args = c.Args()
 			if args.Get(0) == "login" {
@@ -48,7 +57,12 @@ func main() {
 				case "search":
 					ciweimao.Search(args.Get(1), 0)
 				case "download":
-					fetch.DownloadText(args.Get(1))
+					switch bookType {
+					case "txt":
+						fetch.DownloadText(args.Get(1))
+					case "epub":
+						fetch.DownloadEpub(args.Get(1))
+					}
 				}
 			}
 

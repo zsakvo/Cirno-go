@@ -11,45 +11,39 @@ import (
 	"github.com/mitchellh/go-homedir"
 )
 
-var bar *pb.ProgressBar
-
-type textStruct struct {
-	Text string
-	Cid  string
-}
+var txtBar *pb.ProgressBar
 
 func DownloadText(bid string) {
-	detail := ciweimao.GetDetail(bid)
-	fmt.Println(detail.BookName, "/", detail.AuthorName)
-	name := detail.BookName
-	chapters := ciweimao.GetCatalog(bid)
-	totalCount := len(chapters)
-	bar = pb.StartNew(totalCount)
+	txtDetail := ciweimao.GetDetail(bid)
+	fmt.Println(txtDetail.BookName, "/", txtDetail.AuthorName)
+	txtName := txtDetail.BookName
+	txtChapters := ciweimao.GetCatalog(bid)
+	txtTotalCount := len(txtChapters)
+	txtBar = pb.StartNew(txtTotalCount)
 	txtContainer := make(map[string]string)
-	errs := []structure.ChapterList{}
-	txt := make(chan textStruct, 409600)
-	err := make(chan structure.ChapterList, 102400)
-	chaptersArr := splitArray(chapters, 16)
-	for _, cs := range chaptersArr {
-		go getChapterText(cs, txt, err)
+	txtc := make(chan chapterStruct, 409600)
+	errc := make(chan structure.ChapterList, 102400)
+	txtChaptersArr := splitArray(txtChapters, 16)
+	for _, cs := range txtChaptersArr {
+		go getChapterText(cs, txtc, errc)
 	}
 	for {
 		select {
-		case t := <-txt:
+		case t := <-txtc:
 			txtContainer[t.Cid] = t.Text
-			bar.Increment()
-		case e := <-err:
-			go getChapterText([]structure.ChapterList{e}, txt, err)
+			txtBar.Increment()
+		case e := <-errc:
+			go getChapterText([]structure.ChapterList{e}, txtc, errc)
 		}
-		if len(txtContainer)+len(errs) == len(chapters) {
-			close(txt)
-			close(err)
+		if len(txtContainer) == len(txtChapters) {
+			close(txtc)
+			close(errc)
 			break
 		}
 	}
-	bar.Finish()
+	txtBar.Finish()
 	fmt.Println("正在写出文件……")
-	writeText(name, txtContainer, chapters)
+	writeText(txtName, txtContainer, txtChapters)
 	fmt.Println("下载成功！")
 }
 
@@ -74,22 +68,13 @@ func writeText(bookName string, txtContainer map[string]string, chapters []struc
 	}
 	defer file.Close()
 }
-func isExist(path string) bool {
-	_, err := os.Stat(path)
-	if err != nil {
-		return os.IsExist(err)
-	}
-	return true
-}
 
-func getChapterText(chapters []structure.ChapterList, txt chan textStruct, errc chan structure.ChapterList) {
+func getChapterText(chapters []structure.ChapterList, txt chan chapterStruct, errc chan structure.ChapterList) {
 	for _, chapter := range chapters {
 		text := ""
 		chapterInfo, err := ciweimao.GetContent(chapter.ChapterID)
 		if err != nil {
-			// fmt.Println(err)
 			errc <- chapter
-			// errs = append(errs, chapter)
 		} else {
 			// fmt.Println(i)
 			text += chapterInfo.ChapterTitle
@@ -97,29 +82,8 @@ func getChapterText(chapters []structure.ChapterList, txt chan textStruct, errc 
 			text += chapterInfo.TxtContent
 			text += chapterInfo.AuthorSay
 			text += "\n\n\n"
-			txtstr := textStruct{text, chapter.ChapterID}
+			txtstr := chapterStruct{text, chapter.ChapterID}
 			txt <- txtstr
 		}
 	}
-}
-
-func splitArray(arr []structure.ChapterList, num int64) [][]structure.ChapterList {
-	var segmens = make([][]structure.ChapterList, 0)
-	max := int64(len(arr))
-	if max < num {
-		segmens = append(segmens, arr)
-		return segmens
-	}
-	quantity := max / num
-	end := int64(0)
-	for i := int64(1); i <= num; i++ {
-		qu := i * quantity
-		if i != num {
-			segmens = append(segmens, arr[i-1+end:qu])
-		} else {
-			segmens = append(segmens, arr[i-1+end:])
-		}
-		end = qu - i
-	}
-	return segmens
 }
