@@ -1,26 +1,26 @@
 package ciweimao
 
 import (
+	"fmt"
+
 	"../structure"
 	"../util"
 	"github.com/imroc/req"
 	jsoniter "github.com/json-iterator/go"
 )
 
-var chapterId string
-
 func GetContent(cid string) (structure.ChapterInfo, error) {
 	var err error
 	var key string
-	chapterId = cid
-	key, err = getKey()
+	key, err = getKey(cid)
 	if err != nil {
+		fmt.Println(err)
 		return structure.ChapterInfo{}, err
 	}
-	return getDecrypt(key)
+	return getDecrypt(key, cid)
 }
 
-func getKey() (string, error) {
+func getKey(chapterId string) (string, error) {
 	var err error
 	var res []byte
 	paras := req.Param{
@@ -39,7 +39,7 @@ func getKey() (string, error) {
 	return result.Data.Command, nil
 }
 
-func getDecrypt(key string) (structure.ChapterInfo, error) {
+func getDecrypt(key, chapterId string) (structure.ChapterInfo, error) {
 	var err error
 	var res []byte
 	paras := req.Param{
@@ -48,6 +48,7 @@ func getDecrypt(key string) (structure.ChapterInfo, error) {
 	}
 	res, err = util.Get("/chapter/get_cpt_ifm", paras)
 	if err != nil {
+		fmt.Println(err)
 		return structure.ChapterInfo{}, err
 	}
 	var json = jsoniter.ConfigCompatibleWithStandardLibrary
