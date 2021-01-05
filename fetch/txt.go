@@ -20,16 +20,16 @@ type textStruct struct {
 
 func DownloadText(bid string) {
 	detail := ciweimao.GetDetail(bid)
+	fmt.Println(detail.BookName, "/", detail.AuthorName)
 	name := detail.BookName
 	chapters := ciweimao.GetCatalog(bid)
 	totalCount := len(chapters)
-	fmt.Println("开始下载", "《"+name+"》")
 	bar = pb.StartNew(totalCount)
 	txtContainer := make(map[string]string)
 	errs := []structure.ChapterList{}
 	txt := make(chan textStruct, 409600)
 	err := make(chan structure.ChapterList, 102400)
-	chaptersArr := splitArray(chapters, 4)
+	chaptersArr := splitArray(chapters, 16)
 	for _, cs := range chaptersArr {
 		go getChapterText(cs, txt, err)
 	}
@@ -47,8 +47,9 @@ func DownloadText(bid string) {
 			break
 		}
 	}
-	writeText(name, txtContainer, chapters)
 	bar.Finish()
+	fmt.Println("正在写出文件……")
+	writeText(name, txtContainer, chapters)
 	fmt.Println("下载成功！")
 }
 
