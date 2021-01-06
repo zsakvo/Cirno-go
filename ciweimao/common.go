@@ -1286,8 +1286,8 @@ var opfTpl = `<?xml version="1.0" encoding="utf-8" standalone="no"?>
   <metadata>
     <dc:title id="pub-title">{{.Name}}</dc:title>
     <dc:language id="pub-language">zh</dc:language>
-    <dc:creator>Cirno</dc:creator>
-    <dc:contributor>{{.Author}}</dc:contributor> 
+    <dc:creator>{{.Author}}</dc:creator>
+    <dc:contributor>Cirno</dc:contributor> 
     <dc:rights>Copyright © 2015 Hangzhou Fantasy Technology NetworkCo.,Ltd.</dc:rights>
     <meta name="cover" content="cover"/>
   </metadata>
