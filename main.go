@@ -32,11 +32,14 @@ func init() {
 func main() {
 	bookType := "txt"
 	app := &cli.App{
+		Name:  "cirno",
+		Usage: "download e-books from hbooker.com",
 		Flags: []cli.Flag{
 			&cli.StringFlag{
 				Name:        "type",
 				Value:       "txt",
 				Usage:       "set books type",
+				Aliases:     []string{"t"},
 				Destination: &bookType,
 			},
 		},
@@ -46,7 +49,7 @@ func main() {
 				ciweimao.Login()
 			} else {
 				if !canExec {
-					fmt.Println("请先使用 login 命令登陆")
+					fmt.Println("Please login first.")
 					os.Exit(0)
 				}
 				switch args.Get(0) {
@@ -60,9 +63,12 @@ func main() {
 						fetch.DownloadText(args.Get(1))
 					case "epub":
 						fetch.DownloadEpub(args.Get(1))
+					default:
+						fmt.Println("invlid type.")
+						os.Exit(0)
 					}
 				default:
-					fmt.Println("无效指令")
+					fmt.Println("invlid args.")
 					os.Exit(0)
 				}
 			}

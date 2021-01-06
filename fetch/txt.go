@@ -42,9 +42,9 @@ func DownloadText(bid string) {
 		}
 	}
 	txtBar.Finish()
-	fmt.Println("正在写出文件……")
+	fmt.Println("writing out files…")
 	writeText(txtName, txtContainer, txtChapters)
-	fmt.Println("下载成功！")
+	fmt.Println("download success!")
 }
 
 func writeText(bookName string, txtContainer map[string]string, chapters []structure.ChapterList) {
@@ -76,7 +76,6 @@ func getChapterText(chapters []structure.ChapterList, txt chan chapterStruct, er
 		if err != nil {
 			errc <- chapter
 		} else {
-			// fmt.Println(i)
 			text += chapterInfo.ChapterTitle
 			text += "\n\n"
 			text += chapterInfo.TxtContent

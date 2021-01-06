@@ -54,7 +54,7 @@ func DownloadEpub(bid string) {
 	epubDetail := ciweimao.GetDetail(bid)
 	fmt.Println(epubDetail.BookName, "/", epubDetail.AuthorName)
 	epubChapters := ciweimao.GetCatalog(bid)
-	fmt.Println("正在获取数据……")
+	fmt.Println("fetching datas…")
 	initTemp(epubDetail.BookName, epubDetail.AuthorName, epubDetail.Cover, epubChapters)
 	epubTotalCount := len(epubChapters)
 	epubBar = pb.StartNew(epubTotalCount)
@@ -78,7 +78,7 @@ func DownloadEpub(bid string) {
 		}
 	}
 	epubBar.Finish()
-	fmt.Println("正在写出文件……")
+	fmt.Println("writing out files…")
 	epubPath := filepath.Join(tmpPath, "..", epubDetail.BookName+".epub")
 	err = util.CompressEpub(bookPath, epubPath)
 	util.PanicErr(err)
@@ -86,7 +86,7 @@ func DownloadEpub(bid string) {
 	close(epubErrc)
 	err = util.RemoveContents(tmpPath)
 	util.PanicErr(err)
-	fmt.Println("下载成功！")
+	fmt.Println("download success!")
 }
 
 func getChapterEpub(chapters []structure.ChapterList, epubc chan int, epubErrc chan structure.ChapterList) {
