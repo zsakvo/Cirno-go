@@ -18,6 +18,7 @@ import (
 
 var epubBar *pb.ProgressBar
 var tmpPath string
+var bookPath string
 var oebpsPath string
 
 func fixImgTag(str string) string {
@@ -30,12 +31,13 @@ func fixImgTag(str string) string {
 func initTemp(name, author, cover string, chapters []structure.ChapterList) {
 	dir, _ := homedir.Dir()
 	expandedDir, _ := homedir.Expand(dir)
-	tmpPath = expandedDir + "/Cirno/download/tmp/" + name
-	oebpsPath = tmpPath + "/EPUB"
+	tmpPath = expandedDir + "/Cirno/download/tmp/"
+	bookPath = tmpPath + name
+	oebpsPath = bookPath + "/EPUB"
 	var err error
-	err = writeOut(mimetype, tmpPath, "mimetype")
+	err = writeOut(mimetype, bookPath, "mimetype")
 	util.PanicErr(err)
-	err = writeOut(containerXml, tmpPath+"/META-INF", "container.xml")
+	err = writeOut(containerXml, bookPath+"/META-INF", "container.xml")
 	util.PanicErr(err)
 	err = writeOut(getCover(cover), oebpsPath+"/covers", "cover.jpg")
 	util.PanicErr(err)
@@ -48,6 +50,7 @@ func initTemp(name, author, cover string, chapters []structure.ChapterList) {
 }
 
 func DownloadEpub(bid string) {
+	var err error
 	epubDetail := ciweimao.GetDetail(bid)
 	fmt.Println(epubDetail.BookName, "/", epubDetail.AuthorName)
 	epubChapters := ciweimao.GetCatalog(bid)
@@ -59,7 +62,6 @@ func DownloadEpub(bid string) {
 	epubc := make(chan int, 1024)
 	epubErrc := make(chan structure.ChapterList, 102400)
 	epubChaptersArr := splitArray(epubChapters, 16)
-	///
 	for _, cs := range epubChaptersArr {
 		go getChapterEpub(cs, epubc, epubErrc)
 	}
@@ -77,12 +79,14 @@ func DownloadEpub(bid string) {
 	}
 	epubBar.Finish()
 	fmt.Println("正在写出文件……")
-	epubPath := filepath.Join(tmpPath, "..", "..", epubDetail.BookName+".epub")
-	err := util.CompressEpub(tmpPath, epubPath)
+	epubPath := filepath.Join(tmpPath, "..", epubDetail.BookName+".epub")
+	err = util.CompressEpub(bookPath, epubPath)
 	util.PanicErr(err)
-	fmt.Println("下载成功！")
 	close(epubc)
 	close(epubErrc)
+	err = util.RemoveContents(tmpPath)
+	util.PanicErr(err)
+	fmt.Println("下载成功！")
 }
 
 func getChapterEpub(chapters []structure.ChapterList, epubc chan int, epubErrc chan structure.ChapterList) {
