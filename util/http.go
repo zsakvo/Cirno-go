@@ -5,9 +5,9 @@ import (
 	"strings"
 	"time"
 
-	"../config"
-	"../structure"
 	"github.com/imroc/req"
+	"github.com/zsakvo/Cirno-go/config"
+	"github.com/zsakvo/Cirno-go/structure"
 )
 
 var cfg structure.ConfigStruct

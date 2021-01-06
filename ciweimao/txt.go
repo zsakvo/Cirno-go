@@ -5,9 +5,9 @@ import (
 	"log"
 	"os"
 
-	"../structure"
 	"github.com/cheggaaa/pb"
 	"github.com/mitchellh/go-homedir"
+	"github.com/zsakvo/Cirno-go/structure"
 )
 
 var txtBar *pb.ProgressBar

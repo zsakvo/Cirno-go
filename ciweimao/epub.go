@@ -8,11 +8,11 @@ import (
 	"text/template"
 	"time"
 
-	"../structure"
-	"../util"
 	"github.com/cheggaaa/pb"
 	"github.com/imroc/req"
 	"github.com/mitchellh/go-homedir"
+	"github.com/zsakvo/Cirno-go/structure"
+	"github.com/zsakvo/Cirno-go/util"
 )
 
 var epubBar *pb.ProgressBar

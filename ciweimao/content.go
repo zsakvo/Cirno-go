@@ -3,10 +3,10 @@ package ciweimao
 import (
 	"fmt"
 
-	"../structure"
-	"../util"
 	"github.com/imroc/req"
 	jsoniter "github.com/json-iterator/go"
+	"github.com/zsakvo/Cirno-go/structure"
+	"github.com/zsakvo/Cirno-go/util"
 )
 
 func GetContent(cid string) (structure.ChapterInfo, error) {

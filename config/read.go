@@ -5,9 +5,9 @@ import (
 	"log"
 	"os"
 
-	"../structure"
 	"github.com/mitchellh/go-homedir"
 	"github.com/spf13/viper"
+	"github.com/zsakvo/Cirno-go/structure"
 )
 
 func Load() structure.ConfigStruct {

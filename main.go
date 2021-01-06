@@ -5,10 +5,10 @@ import (
 	"log"
 	"os"
 
-	"./ciweimao"
-	"./util"
 	"github.com/mitchellh/go-homedir"
-	"github.com/urfave/cli"
+	"github.com/urfave/cli/v2"
+	"github.com/zsakvo/Cirno-go/ciweimao"
+	"github.com/zsakvo/Cirno-go/util"
 )
 
 var canExec bool

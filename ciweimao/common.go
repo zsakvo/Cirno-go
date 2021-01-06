@@ -5,8 +5,8 @@ import (
 	"os"
 	"path/filepath"
 
-	"../structure"
-	"../util"
+	"github.com/zsakvo/Cirno-go/structure"
+	"github.com/zsakvo/Cirno-go/util"
 )
 
 type chapterStruct struct {

@@ -1,10 +1,10 @@
 package ciweimao
 
 import (
-	"../structure"
-	"../util"
 	"github.com/imroc/req"
 	jsoniter "github.com/json-iterator/go"
+	"github.com/zsakvo/Cirno-go/structure"
+	"github.com/zsakvo/Cirno-go/util"
 )
 
 func GetCatalog(bid string) []structure.ChapterList {
