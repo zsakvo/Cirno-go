@@ -48,7 +48,6 @@ func initTemp(name, author, cover string, chapters []structure.ChapterList) {
 	genBookToc(name, chapters)
 	util.PanicErr(err)
 	genContentOpf(name, author, chapters)
-	os.Exit(0)
 }
 
 func DownloadEpub(bid string) {
@@ -89,6 +88,7 @@ func DownloadEpub(bid string) {
 	err = util.RemoveContents(tmpPath)
 	util.PanicErr(err)
 	fmt.Println("download success!")
+	os.Exit(0)
 }
 
 func getChapterEpub(chapters []structure.ChapterList, epubc chan int, epubErrc chan structure.ChapterList) {
