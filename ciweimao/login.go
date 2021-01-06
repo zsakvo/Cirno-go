@@ -16,9 +16,9 @@ func Login() {
 	var res []byte
 	var name string
 	var passwd string
-	fmt.Printf("账户: ")
+	fmt.Printf("account: ")
 	fmt.Scanln(&name)
-	fmt.Printf("密码: ")
+	fmt.Printf("password: ")
 	fmt.Scanln(&passwd)
 	paras := req.Param{
 		"login_name": name,
