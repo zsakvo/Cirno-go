@@ -45,6 +45,8 @@ func enterCmd(bookName string, page int, bookList []structure.BookList, bookType
 			enterCmd(bookName, page, bookList, bookType)
 		}
 		fmt.Printf("\x1bc")
+		fmt.Printf("search result:")
+		fmt.Println("")
 		Search(bookName, page+1, bookType)
 	case "p":
 		if page-1 < 0 {
@@ -52,6 +54,8 @@ func enterCmd(bookName string, page int, bookList []structure.BookList, bookType
 			enterCmd(bookName, page, bookList, bookType)
 		}
 		fmt.Printf("\x1bc")
+		fmt.Printf("search result:")
+		fmt.Println("")
 		Search(bookName, page-1, bookType)
 	default:
 		bidNum, err := strconv.Atoi(input)
@@ -62,9 +66,13 @@ func enterCmd(bookName string, page int, bookList []structure.BookList, bookType
 		switch bookType {
 		case "txt":
 			fmt.Printf("\x1bc")
+			fmt.Printf("downloading…")
+			fmt.Println("")
 			DownloadText(bookList[bidNum].BookID)
 		case "epub":
 			fmt.Printf("\x1bc")
+			fmt.Printf("downloading…")
+			fmt.Println("")
 			DownloadEpub(bookList[bidNum].BookID)
 		default:
 			fmt.Println("invlid type.")
