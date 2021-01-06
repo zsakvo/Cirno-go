@@ -6,7 +6,6 @@ import (
 	"log"
 	"os"
 	"path/filepath"
-	"runtime"
 	"strings"
 )
 
@@ -16,19 +15,6 @@ func isExist(path string) bool {
 		return os.IsExist(err)
 	}
 	return true
-}
-
-func getSeparator() string {
-	ostype := runtime.GOOS
-	var pathSeparator string
-	if ostype == "windows" {
-		pathSeparator = "\\"
-	} else if ostype == "linux" {
-		pathSeparator = "/"
-	} else if ostype == "darwin" {
-		pathSeparator = "/"
-	}
-	return pathSeparator
 }
 
 func CompressEpub(tmp, dst string) error {
@@ -41,10 +27,10 @@ func CompressEpub(tmp, dst string) error {
 
 	// 创建准备写入的文件
 	fw, err := os.Create(dst)
-	defer fw.Close()
 	if err != nil {
 		return err
 	}
+	defer fw.Close()
 
 	// 通过 fw 来创建 zip.Write
 	zw := zip.NewWriter(fw)
@@ -73,13 +59,13 @@ func CompressEpub(tmp, dst string) error {
 		}
 
 		s := strings.Replace(path, tmp, "", -1)
-		s = strings.TrimPrefix(s, getSeparator())
+		s = strings.TrimPrefix(s, "/")
 		s = strings.Replace(s, "\\", "/", -1)
 		fh.Name = s
 
 		// 这步开始没有加，会发现解压的时候说它不是个目录
 		if fi.IsDir() {
-			fh.Name += getSeparator()
+			fh.Name += "/"
 		}
 
 		// 写入文件信息，并返回一个 Write 结构
@@ -96,17 +82,19 @@ func CompressEpub(tmp, dst string) error {
 
 		// 打开要压缩的文件
 		fr, err := os.Open(path)
+		if err != nil {
+			return
+		}
 		defer fr.Close()
 		if err != nil {
 			return
 		}
-
 		// 将打开的文件 Copy 到 w
-		io.Copy(w, fr)
-		// n, err := io.Copy(w, fr)
+		_, err = io.Copy(w, fr)
 		if err != nil {
 			return
 		}
+		// n, err := io.Copy(w, fr)
 		// 输出压缩的内容
 		return nil
 	})

@@ -2,9 +2,10 @@ package fetch
 
 import (
 	"fmt"
+	"os"
 	"path/filepath"
-	"strconv"
 	"strings"
+	"text/template"
 	"time"
 
 	"../ciweimao"
@@ -19,20 +20,31 @@ var epubBar *pb.ProgressBar
 var tmpPath string
 var oebpsPath string
 
+func fixImgTag(str string) string {
+	if strings.Contains(str, "<img src") && !strings.Contains(str, "</img?") {
+		str += "</img>"
+	}
+	return str
+}
+
 func initTemp(name, author, cover string, chapters []structure.ChapterList) {
 	dir, _ := homedir.Dir()
 	expandedDir, _ := homedir.Expand(dir)
-	tmpPath = filepath.Join(expandedDir, "Cirno", "download", "tmp", name)
-	oebpsPath = filepath.Join(tmpPath, "OEBPS")
-	coverElement := coverHeader + "\n" + "<img src=\"cover.jpg\" alt=\"" + name + "\" />" + coverFooter
-	writeOut(mimetype, tmpPath, "mimetype")
-	writeOut(container, filepath.Join(tmpPath, "META-INF"), "container.xml")
-	writeOut(coverElement, oebpsPath, "cover.html")
-	writeOut(getCover(cover), oebpsPath, "cover.jpg")
-	writeOut(css, oebpsPath, "style.css")
-	writeOut(genBookToc(chapters), oebpsPath, "book-toc.html")
-	writeOut(genContentOpf(name, author, chapters), oebpsPath, "content.opf")
-	writeOut(genTocNcx(name, author, chapters), oebpsPath, "toc.ncx")
+	tmpPath = expandedDir + "/Cirno/download/tmp/" + name
+	oebpsPath = tmpPath + "/EPUB"
+	var err error
+	err = writeOut(mimetype, tmpPath, "mimetype")
+	util.PanicErr(err)
+	err = writeOut(containerXml, tmpPath+"/META-INF", "container.xml")
+	util.PanicErr(err)
+	err = writeOut(getCover(cover), oebpsPath+"/covers", "cover.jpg")
+	util.PanicErr(err)
+	err = writeOut(epubCss, oebpsPath+"/css", "epub.css")
+	util.PanicErr(err)
+	err = writeOut(synthCss, oebpsPath+"/css", "synth.css")
+	genBookToc(name, chapters)
+	util.PanicErr(err)
+	genContentOpf(name, author, chapters)
 }
 
 func DownloadEpub(bid string) {
@@ -43,8 +55,8 @@ func DownloadEpub(bid string) {
 	initTemp(epubDetail.BookName, epubDetail.AuthorName, epubDetail.Cover, epubChapters)
 	epubTotalCount := len(epubChapters)
 	epubBar = pb.StartNew(epubTotalCount)
-	epubContainer := make(map[string]string)
-	epubc := make(chan chapterStruct, 409600)
+	epubContainer := []int{}
+	epubc := make(chan int, 1024)
 	epubErrc := make(chan structure.ChapterList, 102400)
 	epubChaptersArr := splitArray(epubChapters, 16)
 	///
@@ -54,94 +66,64 @@ func DownloadEpub(bid string) {
 	for {
 		select {
 		case epub := <-epubc:
-			epubContainer[epub.Cid] = epub.Text
+			epubContainer = append(epubContainer, epub)
 			epubBar.Increment()
 		case e := <-epubErrc:
 			go getChapterEpub([]structure.ChapterList{e}, epubc, epubErrc)
 		}
 		if len(epubContainer) == len(epubChapters) {
-			close(epubc)
-			close(epubErrc)
 			break
 		}
 	}
-	///
-	///
 	epubBar.Finish()
 	fmt.Println("正在写出文件……")
-	// writeEpub(epubDetail.BookName, epubContainer, epubChapters)
 	epubPath := filepath.Join(tmpPath, "..", "..", epubDetail.BookName+".epub")
-	util.CompressEpub(tmpPath, epubPath)
-	// fmt.Println(tmpPath)
+	err := util.CompressEpub(tmpPath, epubPath)
+	util.PanicErr(err)
 	fmt.Println("下载成功！")
+	close(epubc)
+	close(epubErrc)
 }
 
-func writeEpub(bookName string, epubContainer map[string]string, epubChapters []structure.ChapterList) {
-}
-
-func getChapterEpub(chapters []structure.ChapterList, epubc chan chapterStruct, epubErrc chan structure.ChapterList) {
+func getChapterEpub(chapters []structure.ChapterList, epubc chan int, epubErrc chan structure.ChapterList) {
 	for _, chapter := range chapters {
-		// text := ""
 		chapterInfo, err := ciweimao.GetContent(chapter.ChapterID)
 		if err != nil {
 			epubErrc <- chapter
 		} else {
 			content := chapterInfo.TxtContent
-			titleElement := "<h2 id=\"title\" class=\"titlel2std\">" + chapterInfo.ChapterTitle + "</h2>"
-			content = strings.Replace(content, "　　", "<p class=\"a\">　　", -1)
-			content = strings.Replace(content, "\n", "</p>", -1)
-			content = strings.Replace(content, "</p></p>", "</p>", -1)
+			content += chapterInfo.AuthorSay
 			content = strings.Replace(content, "&", "&#38;", -1)
-			// fmt.Println(i)
-			// text += chapterInfo.ChapterTitle
-			// text += "\n\n"
-			// text += chapterInfo.TxtContent
-			// text += chapterInfo.AuthorSay
-			// text += "\n\n\n"
-			txtstr := chapterStruct{contentHeader + "\n" + titleElement + "\n" + content + "\n" + contentFooter, chapter.ChapterID}
-			fileName := "chapter" + chapter.ChapterID + ".html"
-			writeOut(contentHeader+"\n"+titleElement+"\n"+content+"\n"+contentFooter, oebpsPath, fileName)
-			epubc <- txtstr
+			contentParas := strings.Split(content, "\n")
+			contentS := contentStruct{chapterInfo.ChapterTitle, contentParas}
+			fileName := oebpsPath + "/" + chapter.ChapterID + ".xhtml"
+			tmpl, _ := template.New("content").Funcs(template.FuncMap{"fixImgTag": fixImgTag}).Parse(chapterTpl)
+			file, _ := os.OpenFile(fileName, os.O_CREATE|os.O_WRONLY, 0777)
+			err := tmpl.Execute(file, contentS)
+			if err != nil {
+				epubErrc <- chapter
+			}
+			epubc <- 0
 		}
 	}
 }
 
-func replace(input, from, to string) string {
-	return strings.Replace(input, from, to, -1)
+func genBookToc(name string, chapters []structure.ChapterList) {
+	tocS := bookTocStruct{name, chapters}
+	fileName := oebpsPath + "/book-toc.xhtml"
+	tmpl, _ := template.New("toc").Parse(bookTocTpl)
+	file, _ := os.OpenFile(fileName, os.O_CREATE|os.O_WRONLY, 0777)
+	err := tmpl.Execute(file, tocS)
+	util.PanicErr(err)
 }
 
-func genBookToc(chapters []structure.ChapterList) string {
-	var str string
-	for _, chapter := range chapters {
-		str += "<dt class=\"tocl2\"><a href=\"chapter" + chapter.ChapterID + ".html\">" + chapter.ChapterTitle + "</a></dt>"
-
-	}
-	return bookTocHeader + str + bookTocFooter
-}
-
-func genContentOpf(name, author string, chapters []structure.ChapterList) string {
-	var manifestStr string
-	var spineStr string
-	for i, chapter := range chapters {
-		manifestStr += "<item id=\"chapter" + strconv.Itoa(i) + "\" href=\"chapter" + chapter.ChapterID + ".html\" media-type=\"application/xhtml+xml\"/>"
-		spineStr += "<itemref idref=\"chapter" + strconv.Itoa(i) + "\" linear=\"yes\"/>"
-
-	}
-	contentOpfHeader = strings.Replace(contentOpfHeader, "bookTitle", name, 1)
-	contentOpfHeader = strings.Replace(contentOpfHeader, "bookAuthor", author, 1)
-	return contentOpfHeader + contentOpfManifestHeader + manifestStr + contentOpfManifestFooter + contentOpfNcxtocHeader + spineStr + contentOpfNcxtocFooter + contentOpfFooter
-}
-
-func genTocNcx(name, author string, chapters []structure.ChapterList) string {
-	docTitle := "<docTitle><text>" + name + "</text></docTitle>"
-	docAuthor := "<docAuthor><text>" + author + "</text></docAuthor>"
-	navMap := "<navMap> <navPoint id=\"cover\" playOrder=\"1\"> <navLabel><text>封面</text></navLabel> <content src=\"cover.html\"/> </navPoint> <navPoint id=\"htmltoc\" playOrder=\"2\"> <navLabel><text>目录</text></navLabel> <content src=\"book-toc.html\"/> </navPoint>\""
-	var str string
-	for i, chapter := range chapters {
-		str += "<navPoint id=\"chapter" + strconv.Itoa(i) + "\" playOrder=\"" + strconv.Itoa(3+i) + "\"> <navLabel><text>" + chapter.ChapterTitle + "</text></navLabel> <content src=\"chapter" + chapter.ChapterID + ".html\"/> </navPoint>"
-
-	}
-	return tocNcxHeader + docTitle + docAuthor + navMap + str + tocNcxFooter
+func genContentOpf(name, author string, chapters []structure.ChapterList) {
+	opfS := opfStruct{name, author, chapters}
+	fileName := oebpsPath + "/package.opf"
+	tmpl, _ := template.New("opf").Parse(opfTpl)
+	file, _ := os.OpenFile(fileName, os.O_CREATE|os.O_WRONLY, 0777)
+	err := tmpl.Execute(file, opfS)
+	util.PanicErr(err)
 }
 
 func getCover(url string) string {

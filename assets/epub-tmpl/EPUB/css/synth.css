@@ -1,0 +1,9 @@
+@media speech {
+  .digits {
+    -epub-speak-as: digits;
+  }
+
+  .spell {
+    -epub-speak-as: spell-out;
+  }
+}
