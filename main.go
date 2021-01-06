@@ -6,7 +6,6 @@ import (
 	"os"
 
 	"./ciweimao"
-	"./fetch"
 	"./util"
 	"github.com/mitchellh/go-homedir"
 	"github.com/urfave/cli"
@@ -56,13 +55,13 @@ func main() {
 				case "login":
 					ciweimao.Login()
 				case "search":
-					ciweimao.Search(args.Get(1), 0)
+					ciweimao.Search(args.Get(1), 0, bookType)
 				case "download":
 					switch bookType {
 					case "txt":
-						fetch.DownloadText(args.Get(1))
+						ciweimao.DownloadText(args.Get(1))
 					case "epub":
-						fetch.DownloadEpub(args.Get(1))
+						ciweimao.DownloadEpub(args.Get(1))
 					default:
 						fmt.Println("invlid type.")
 						os.Exit(0)

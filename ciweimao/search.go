@@ -2,6 +2,8 @@ package ciweimao
 
 import (
 	"fmt"
+	"os"
+	"strconv"
 
 	"../structure"
 	"../util"
@@ -9,7 +11,7 @@ import (
 	jsoniter "github.com/json-iterator/go"
 )
 
-func Search(bookName string, page int) {
+func Search(bookName string, page int, bookType string) {
 	var err error
 	var res []byte
 	paras := req.Param{
@@ -26,6 +28,47 @@ func Search(bookName string, page int) {
 	util.PanicErr(err)
 	bookList := result.Data.BookList
 	for i, book := range bookList {
-		fmt.Println(i, "-", book.BookName, "-", book.BookID)
+		fmt.Println(i, "-", book.BookName)
+	}
+	enterCmd(bookName, page, bookList, bookType)
+}
+
+func enterCmd(bookName string, page int, bookList []structure.BookList, bookType string) {
+	var input string
+	fmt.Printf("enter the number to download, n to next page, and p to previous page: ")
+	fmt.Scanln(&input)
+	fmt.Println("")
+	switch input {
+	case "n":
+		if len(bookList) < 10 {
+			fmt.Println("already the last page.")
+			enterCmd(bookName, page, bookList, bookType)
+		}
+		fmt.Printf("\x1bc")
+		Search(bookName, page+1, bookType)
+	case "p":
+		if page-1 < 0 {
+			fmt.Println("already the first page.")
+			enterCmd(bookName, page, bookList, bookType)
+		}
+		fmt.Printf("\x1bc")
+		Search(bookName, page-1, bookType)
+	default:
+		bidNum, err := strconv.Atoi(input)
+		if err != nil {
+			fmt.Println("invalid num code")
+			enterCmd(bookName, page, bookList, bookType)
+		}
+		switch bookType {
+		case "txt":
+			fmt.Printf("\x1bc")
+			DownloadText(bookList[bidNum].BookID)
+		case "epub":
+			fmt.Printf("\x1bc")
+			DownloadEpub(bookList[bidNum].BookID)
+		default:
+			fmt.Println("invlid type.")
+			os.Exit(0)
+		}
 	}
 }

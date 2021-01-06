@@ -16,7 +16,7 @@ func IsExist(path string) bool {
 func RemoveContents(dir string) error {
 	d, err := os.Open(dir)
 	if err != nil {
-		return err
+		return nil
 	}
 	defer d.Close()
 	names, err := d.Readdirnames(-1)

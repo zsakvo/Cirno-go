@@ -1,4 +1,4 @@
-package fetch
+package ciweimao
 
 import (
 	"io/ioutil"

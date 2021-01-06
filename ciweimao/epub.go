@@ -1,4 +1,4 @@
-package fetch
+package ciweimao
 
 import (
 	"fmt"
@@ -8,7 +8,6 @@ import (
 	"text/template"
 	"time"
 
-	"../ciweimao"
 	"../structure"
 	"../util"
 	"github.com/cheggaaa/pb"
@@ -29,12 +28,14 @@ func fixImgTag(str string) string {
 }
 
 func initTemp(name, author, cover string, chapters []structure.ChapterList) {
+	var err error
+	err = util.RemoveContents(tmpPath)
+	util.PanicErr(err)
 	dir, _ := homedir.Dir()
 	expandedDir, _ := homedir.Expand(dir)
 	tmpPath = expandedDir + "/Cirno/download/tmp/"
 	bookPath = tmpPath + name
 	oebpsPath = bookPath + "/EPUB"
-	var err error
 	err = writeOut(mimetype, bookPath, "mimetype")
 	util.PanicErr(err)
 	err = writeOut(containerXml, bookPath+"/META-INF", "container.xml")
@@ -47,13 +48,14 @@ func initTemp(name, author, cover string, chapters []structure.ChapterList) {
 	genBookToc(name, chapters)
 	util.PanicErr(err)
 	genContentOpf(name, author, chapters)
+	os.Exit(0)
 }
 
 func DownloadEpub(bid string) {
 	var err error
-	epubDetail := ciweimao.GetDetail(bid)
+	epubDetail := GetDetail(bid)
 	fmt.Println(epubDetail.BookName, "/", epubDetail.AuthorName)
-	epubChapters := ciweimao.GetCatalog(bid)
+	epubChapters := GetCatalog(bid)
 	fmt.Println("fetching datas…")
 	initTemp(epubDetail.BookName, epubDetail.AuthorName, epubDetail.Cover, epubChapters)
 	epubTotalCount := len(epubChapters)
@@ -91,7 +93,7 @@ func DownloadEpub(bid string) {
 
 func getChapterEpub(chapters []structure.ChapterList, epubc chan int, epubErrc chan structure.ChapterList) {
 	for _, chapter := range chapters {
-		chapterInfo, err := ciweimao.GetContent(chapter.ChapterID)
+		chapterInfo, err := GetContent(chapter.ChapterID)
 		if err != nil {
 			epubErrc <- chapter
 		} else {

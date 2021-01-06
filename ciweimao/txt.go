@@ -1,11 +1,10 @@
-package fetch
+package ciweimao
 
 import (
 	"fmt"
 	"log"
 	"os"
 
-	"../ciweimao"
 	"../structure"
 	"github.com/cheggaaa/pb"
 	"github.com/mitchellh/go-homedir"
@@ -14,10 +13,10 @@ import (
 var txtBar *pb.ProgressBar
 
 func DownloadText(bid string) {
-	txtDetail := ciweimao.GetDetail(bid)
+	txtDetail := GetDetail(bid)
 	fmt.Println(txtDetail.BookName, "/", txtDetail.AuthorName)
 	txtName := txtDetail.BookName
-	txtChapters := ciweimao.GetCatalog(bid)
+	txtChapters := GetCatalog(bid)
 	txtTotalCount := len(txtChapters)
 	txtBar = pb.StartNew(txtTotalCount)
 	txtContainer := make(map[string]string)
@@ -45,6 +44,7 @@ func DownloadText(bid string) {
 	fmt.Println("writing out files…")
 	writeText(txtName, txtContainer, txtChapters)
 	fmt.Println("download success!")
+	os.Exit(0)
 }
 
 func writeText(bookName string, txtContainer map[string]string, chapters []structure.ChapterList) {
@@ -72,7 +72,7 @@ func writeText(bookName string, txtContainer map[string]string, chapters []struc
 func getChapterText(chapters []structure.ChapterList, txt chan chapterStruct, errc chan structure.ChapterList) {
 	for _, chapter := range chapters {
 		text := ""
-		chapterInfo, err := ciweimao.GetContent(chapter.ChapterID)
+		chapterInfo, err := GetContent(chapter.ChapterID)
 		if err != nil {
 			errc <- chapter
 		} else {
