@@ -50,8 +50,6 @@ func main() {
 					os.Exit(0)
 				}
 				switch args.Get(0) {
-				case "demo":
-					ciweimao.Demo()
 				case "login":
 					ciweimao.Login()
 				case "search":
@@ -63,6 +61,9 @@ func main() {
 					case "epub":
 						fetch.DownloadEpub(args.Get(1))
 					}
+				default:
+					fmt.Println("无效指令")
+					os.Exit(0)
 				}
 			}
 

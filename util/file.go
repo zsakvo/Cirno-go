@@ -29,5 +29,6 @@ func RemoveContents(dir string) error {
 			return err
 		}
 	}
+	os.RemoveAll(dir)
 	return nil
 }
