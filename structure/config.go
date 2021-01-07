@@ -22,6 +22,7 @@ type Web struct {
 }
 
 type Extra struct {
-	Coroutines int  `mapstructure:"coroutines"`
-	Cpic       bool `mapstructure:"cpic"`
+	Coroutines  int  `mapstructure:"coroutines"`
+	Cpic        bool `mapstructure:"cpic"`
+	CacheNoPaid bool `mapstructure:"cache_no_paid"`
 }

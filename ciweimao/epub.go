@@ -22,6 +22,7 @@ var tmpPath string
 var bookPath string
 var oebpsPath string
 var cpic bool
+var cacheNoPaid bool
 
 func fixImgTag(str string) string {
 	if strings.Contains(str, "<img src") && !strings.Contains(str, "</img?") {
@@ -71,20 +72,30 @@ func initTemp(name, author, cover string, chapters []structure.ChapterList) {
 
 func DownloadEpub(bid string) {
 	cpic = config.Config.Extra.Cpic
-	fmt.Println(cpic)
+	cacheNoPaid = config.Config.Extra.CacheNoPaid
 	var err error
 	epubDetail := GetDetail(bid)
 	fmt.Println(epubDetail.BookName, "/", epubDetail.AuthorName)
 	epubChapters := GetCatalog(bid)
+	var chapters []structure.ChapterList
+	if !cacheNoPaid {
+		for _, c := range epubChapters {
+			if c.IsPaid == "0" {
+				chapters = append(chapters, c)
+			}
+		}
+	} else {
+		chapters = epubChapters
+	}
 	fmt.Println("fetching datas…")
 	initTemp(epubDetail.BookName, epubDetail.AuthorName, epubDetail.Cover, epubChapters)
-	epubTotalCount := len(epubChapters)
+	epubTotalCount := len(chapters)
 	epubBar = pb.StartNew(epubTotalCount)
 	epubContainer := []int{}
 	epubc := make(chan int, 1024)
 	epubErrc := make(chan structure.ChapterList, 102400)
 	coroutine := config.Config.Extra.Coroutines
-	epubChaptersArr := splitArray(epubChapters, coroutine)
+	epubChaptersArr := splitArray(chapters, coroutine)
 	for _, cs := range epubChaptersArr {
 		go getChapterEpub(cs, epubc, epubErrc)
 	}
@@ -96,7 +107,7 @@ func DownloadEpub(bid string) {
 		case e := <-epubErrc:
 			go getChapterEpub([]structure.ChapterList{e}, epubc, epubErrc)
 		}
-		if len(epubContainer) == len(epubChapters) {
+		if len(epubContainer) == len(chapters) {
 			break
 		}
 	}

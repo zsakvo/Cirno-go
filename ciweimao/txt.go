@@ -12,19 +12,31 @@ import (
 )
 
 var txtBar *pb.ProgressBar
+var cacheNoPaidTxt bool
 
 func DownloadText(bid string) {
+	cacheNoPaidTxt = config.Config.Extra.CacheNoPaid
 	txtDetail := GetDetail(bid)
 	fmt.Println(txtDetail.BookName, "/", txtDetail.AuthorName)
 	txtName := txtDetail.BookName
 	txtChapters := GetCatalog(bid)
-	txtTotalCount := len(txtChapters)
+	var chapters []structure.ChapterList
+	if !cacheNoPaidTxt {
+		for _, c := range txtChapters {
+			if c.IsPaid == "0" {
+				chapters = append(chapters, c)
+			}
+		}
+	} else {
+		chapters = txtChapters
+	}
+	txtTotalCount := len(chapters)
 	txtBar = pb.StartNew(txtTotalCount)
 	txtContainer := make(map[string]string)
 	txtc := make(chan chapterStruct, 409600)
 	errc := make(chan structure.ChapterList, 102400)
 	coroutine := config.Config.Extra.Coroutines
-	txtChaptersArr := splitArray(txtChapters, coroutine)
+	txtChaptersArr := splitArray(chapters, coroutine)
 	for _, cs := range txtChaptersArr {
 		go getChapterText(cs, txtc, errc)
 	}
@@ -36,7 +48,7 @@ func DownloadText(bid string) {
 		case e := <-errc:
 			go getChapterText([]structure.ChapterList{e}, txtc, errc)
 		}
-		if len(txtContainer) == len(txtChapters) {
+		if len(txtContainer) == len(chapters) {
 			close(txtc)
 			close(errc)
 			break
@@ -44,7 +56,7 @@ func DownloadText(bid string) {
 	}
 	txtBar.Finish()
 	fmt.Println("writing out files…")
-	writeText(txtName, txtContainer, txtChapters)
+	writeText(txtName, txtContainer, chapters)
 	fmt.Println("download success!")
 	os.Exit(0)
 }
