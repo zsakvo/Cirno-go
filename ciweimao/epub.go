@@ -11,6 +11,7 @@ import (
 	"github.com/cheggaaa/pb"
 	"github.com/imroc/req"
 	"github.com/mitchellh/go-homedir"
+	"github.com/zsakvo/Cirno-go/config"
 	"github.com/zsakvo/Cirno-go/structure"
 	"github.com/zsakvo/Cirno-go/util"
 )
@@ -51,7 +52,6 @@ func initTemp(name, author, cover string, chapters []structure.ChapterList) {
 }
 
 func DownloadEpub(bid string) {
-	// fmt.Println(bid)
 	var err error
 	epubDetail := GetDetail(bid)
 	fmt.Println(epubDetail.BookName, "/", epubDetail.AuthorName)
@@ -63,7 +63,8 @@ func DownloadEpub(bid string) {
 	epubContainer := []int{}
 	epubc := make(chan int, 1024)
 	epubErrc := make(chan structure.ChapterList, 102400)
-	epubChaptersArr := splitArray(epubChapters, 3)
+	coroutine := config.Config.Extra.Coroutines
+	epubChaptersArr := splitArray(epubChapters, coroutine)
 	for _, cs := range epubChaptersArr {
 		go getChapterEpub(cs, epubc, epubErrc)
 	}

@@ -7,6 +7,7 @@ import (
 
 	"github.com/cheggaaa/pb"
 	"github.com/mitchellh/go-homedir"
+	"github.com/zsakvo/Cirno-go/config"
 	"github.com/zsakvo/Cirno-go/structure"
 )
 
@@ -22,7 +23,8 @@ func DownloadText(bid string) {
 	txtContainer := make(map[string]string)
 	txtc := make(chan chapterStruct, 409600)
 	errc := make(chan structure.ChapterList, 102400)
-	txtChaptersArr := splitArray(txtChapters, 3)
+	coroutine := config.Config.Extra.Coroutines
+	txtChaptersArr := splitArray(txtChapters, coroutine)
 	for _, cs := range txtChaptersArr {
 		go getChapterText(cs, txtc, errc)
 	}

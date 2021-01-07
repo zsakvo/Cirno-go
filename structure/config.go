@@ -1,8 +1,9 @@
 package structure
 
 type ConfigStruct struct {
-	App App `mapstructure:"app"`
-	Web Web `mapstructure:"web"`
+	App   App   `mapstructure:"app"`
+	Web   Web   `mapstructure:"web"`
+	Extra Extra `mapstructure:"extra"`
 }
 
 type App struct {
@@ -17,5 +18,9 @@ type App struct {
 }
 
 type Web struct {
-	Port interface{} `mapstructure:"port"`
+	Port int `mapstructure:"port"`
+}
+
+type Extra struct {
+	Coroutines int `mapstructure:"coroutines"`
 }
