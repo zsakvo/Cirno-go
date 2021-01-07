@@ -30,6 +30,10 @@ type bookTocStruct struct {
 	Chapters []structure.ChapterList
 }
 
+func cleanDestBook(dir, name, bType string) {
+	os.Remove(dir + name + "." + bType)
+}
+
 func splitArray(arr []structure.ChapterList, num int) [][]structure.ChapterList {
 	var segmens = make([][]structure.ChapterList, 0)
 	max := len(arr)

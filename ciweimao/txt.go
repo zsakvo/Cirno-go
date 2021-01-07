@@ -65,6 +65,7 @@ func writeText(bookName string, txtContainer map[string]string, chapters []struc
 	bookText := ""
 	dir, _ := homedir.Dir()
 	expandedDir, _ := homedir.Expand(dir)
+	cleanDestBook(expandedDir+"/Cirno/download/", bookName, "txt")
 	for _, chapter := range chapters {
 		bookText += txtContainer[chapter.ChapterID]
 	}

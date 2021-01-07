@@ -53,6 +53,7 @@ func initTemp(name, author, cover string, chapters []structure.ChapterList) {
 	util.PanicErr(err)
 	dir, _ := homedir.Dir()
 	expandedDir, _ := homedir.Expand(dir)
+	cleanDestBook(expandedDir+"/Cirno/download/", name, "epub")
 	tmpPath = expandedDir + "/Cirno/download/tmp/"
 	bookPath = tmpPath + name
 	oebpsPath = bookPath + "/EPUB"
