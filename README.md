@@ -13,17 +13,38 @@
 - Download books as txt and epub files ([epub3.0](http://idpf.org/epub/30/))
 - Download vip chapters
 - Multi-threads support
+- Cache iamages in chapters
 
 ## Usage
 
 - `cirno login` to Log in to your account.
 - `cirno search xxxx` to search books.
 - `cirno download bid` to download books.
-- You can add `--type` flag to specify the books type, support txt and epub, default value is txt.
+- You can add `--type` flag to specify the books type, support `txt` and `epub`, default value is `txt`.
+  
   ```shell
   cirno -t epub download 100003327
   cirno -t epub search happyend
   ```
+
+## Config
+
+- All files about `Cirno-go` are located in `$HOME/Cirno/`
+- Do not delete `config.yaml`, otherwise you need to do `cirno login` again.
+- Cache chapter images is an extra feature, you need open it manually, Such as:
+
+  ```yaml
+  app:
+    account: 
+    login_token: 
+    user_name: 
+
+  extra:
+    cpic: true  #set true to cache images automatically.
+  ```
+- There is a little extra properties waiting for you to discover.
+
+
 
 ## Download
 
