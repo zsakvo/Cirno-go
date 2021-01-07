@@ -11,7 +11,6 @@ import (
 )
 
 func Login() {
-	util.InitTmpReq()
 	var err error
 	var res []byte
 	var name string
@@ -32,6 +31,6 @@ func Login() {
 	if err != nil {
 		panic(err)
 	} else {
-		config.Write(name, passwd, result.Data.LoginToken, result.Data.ReaderInfo.Account)
+		config.Write(name, result.Data.LoginToken, result.Data.ReaderInfo.Account)
 	}
 }

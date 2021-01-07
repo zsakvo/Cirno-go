@@ -22,7 +22,7 @@ func DownloadText(bid string) {
 	txtContainer := make(map[string]string)
 	txtc := make(chan chapterStruct, 409600)
 	errc := make(chan structure.ChapterList, 102400)
-	txtChaptersArr := splitArray(txtChapters, 16)
+	txtChaptersArr := splitArray(txtChapters, 3)
 	for _, cs := range txtChaptersArr {
 		go getChapterText(cs, txtc, errc)
 	}

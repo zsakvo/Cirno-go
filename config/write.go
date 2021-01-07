@@ -8,7 +8,7 @@ import (
 	"github.com/spf13/viper"
 )
 
-func Write(name, password, token, account string) {
+func Write(name, token, account string) {
 	dir, _ := homedir.Dir()
 	expandedDir, _ := homedir.Expand(dir)
 	filePath := expandedDir + "/Cirno/config.yaml"
@@ -28,7 +28,6 @@ func Write(name, password, token, account string) {
 	viper.Set("app.login_token", token)
 	viper.Set("app.account", account)
 	viper.Set("app.user_name", name)
-	viper.Set("app.password", password)
 	err1 := viper.WriteConfig()
 	if err1 != nil {
 		fmt.Printf("writeout config file error: %s\n", err1)

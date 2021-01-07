@@ -7,20 +7,12 @@ import (
 
 	"github.com/imroc/req"
 	"github.com/zsakvo/Cirno-go/config"
-	"github.com/zsakvo/Cirno-go/structure"
 )
 
-var cfg structure.ConfigStruct
-
-func InitReq() {
-	cfg = config.Load()
-}
-
-func InitTmpReq() {
-	cfg = config.GetTmp()
-}
+var client *req.Req
 
 func Get(url string, paras req.Param) ([]byte, error) {
+	cfg := config.Config
 	var err error
 	var r *req.Resp
 	var res []byte
@@ -41,7 +33,9 @@ func Get(url string, paras req.Param) ([]byte, error) {
 	for k, v := range paras {
 		param[k] = v
 	}
-	client := req.New()
+	if client == nil {
+		client = req.New()
+	}
 	client.SetTimeout(20 * time.Second)
 	r, err = client.Get("https://app.hbooker.com"+url, param, req.Header{"User-Agent": cfg.App.UserAgent})
 	if err != nil {

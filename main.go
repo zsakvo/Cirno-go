@@ -8,6 +8,7 @@ import (
 	"github.com/mitchellh/go-homedir"
 	"github.com/urfave/cli/v2"
 	"github.com/zsakvo/Cirno-go/ciweimao"
+	"github.com/zsakvo/Cirno-go/config"
 	"github.com/zsakvo/Cirno-go/util"
 )
 
@@ -22,10 +23,10 @@ func init() {
 	}
 	if util.IsExist(expandedDir + "/Cirno/config.yaml") {
 		canExec = true
-		util.InitReq()
 	} else {
 		canExec = false
 	}
+	config.InitConfig(canExec)
 }
 
 func main() {
