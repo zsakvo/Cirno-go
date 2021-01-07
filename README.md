@@ -19,10 +19,10 @@
 - `cirno login` to Log in to your account.
 - `cirno search xxxx` to search books.
 - `cirno download bid` to download books.
-- You can add `--type` flag to specify the books type, support `txt` and `epub`, default value is `txt`.
+- You can add `--type` flag to specify the books type, support txt and epub, default value is txt.
   ```shell
   cirno -t epub download 100003327
-  cirno -t epub search 幻想乡的琐碎日常
+  cirno -t epub search happyend
   ```
 
 ## Download
