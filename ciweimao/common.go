@@ -1274,7 +1274,7 @@ var chapterTpl = `<?xml version="1.0" encoding="UTF-8" standalone="no"?>
   <body>
     <section class="sect1" title="{{.CName}}">
       <h2 class="title">{{.CName}}</h2>
-{{ range $value := .ChapterParas }}       <p>{{fixImgTag $value}}</p>
+{{ range $value := .ChapterParas }}       <p>{{fixImg $value}}</p>
 {{ end }}    </section>
   </body>
 </html>

@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"regexp"
 	"strings"
 	"text/template"
 	"time"
@@ -20,12 +21,29 @@ var epubBar *pb.ProgressBar
 var tmpPath string
 var bookPath string
 var oebpsPath string
+var cpic bool
 
 func fixImgTag(str string) string {
 	if strings.Contains(str, "<img src") && !strings.Contains(str, "</img?") {
 		str += "</img>"
 	}
 	return str
+}
+
+func getImg(str string) string {
+	if strings.Contains(str, "<img src") {
+		var res = regexp.MustCompile(`<img src="(\S*)" alt`)
+		var src = res.FindAllStringSubmatch(str, -1)[0][1]
+		arrs := strings.Split(src, "/")
+		picName := arrs[len(arrs)-1]
+		err := writeOut(getCover(src), oebpsPath+"/covers", picName)
+		if err != nil {
+			fmt.Println(picName, "下载失败")
+		}
+		return `<img src="./covers/` + picName + `"/>`
+	} else {
+		return str
+	}
 }
 
 func initTemp(name, author, cover string, chapters []structure.ChapterList) {
@@ -52,6 +70,8 @@ func initTemp(name, author, cover string, chapters []structure.ChapterList) {
 }
 
 func DownloadEpub(bid string) {
+	cpic = config.Config.Extra.Cpic
+	fmt.Println(cpic)
 	var err error
 	epubDetail := GetDetail(bid)
 	fmt.Println(epubDetail.BookName, "/", epubDetail.AuthorName)
@@ -105,7 +125,12 @@ func getChapterEpub(chapters []structure.ChapterList, epubc chan int, epubErrc c
 			contentParas := strings.Split(content, "\n")
 			contentS := contentStruct{chapterInfo.ChapterTitle, contentParas}
 			fileName := oebpsPath + "/" + chapter.ChapterID + ".xhtml"
-			tmpl, _ := template.New("content").Funcs(template.FuncMap{"fixImgTag": fixImgTag}).Parse(chapterTpl)
+			var tmpl *template.Template
+			if cpic {
+				tmpl, _ = template.New("content").Funcs(template.FuncMap{"fixImg": getImg}).Parse(chapterTpl)
+			} else {
+				tmpl, _ = template.New("content").Funcs(template.FuncMap{"fixImg": fixImgTag}).Parse(chapterTpl)
+			}
 			file, _ := os.OpenFile(fileName, os.O_CREATE|os.O_WRONLY, 0777)
 			err := tmpl.Execute(file, contentS)
 			if err != nil {

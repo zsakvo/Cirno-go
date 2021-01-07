@@ -22,5 +22,6 @@ type Web struct {
 }
 
 type Extra struct {
-	Coroutines int `mapstructure:"coroutines"`
+	Coroutines int  `mapstructure:"coroutines"`
+	Cpic       bool `mapstructure:"cpic"`
 }

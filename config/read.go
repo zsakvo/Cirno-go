@@ -24,6 +24,7 @@ func InitConfig(hasConfig bool) {
 		viper.SetDefault("app.user_agent", "Android com.kuangxiangciweimao.novel")
 		viper.SetDefault("app.default_key", "zG2nSeEfSHfvTCHy5LCcqtBbQehKNLXn")
 		viper.SetDefault("extra.coroutines", 3)
+		viper.SetDefault("extra.cpic", false)
 		err := viper.ReadInConfig()
 		if err != nil {
 			fmt.Printf("config file error: %s\n", err)
