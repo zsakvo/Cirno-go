@@ -81,7 +81,7 @@ func DownloadEpub(bid string) {
 	var chapters []structure.ChapterList
 	if !cacheNoPaid {
 		for _, c := range epubChapters {
-			if c.IsPaid == "0" {
+			if c.AuthAccess == "1" {
 				chapters = append(chapters, c)
 			}
 		}
