@@ -50,6 +50,11 @@
 
 No pre-build binaries to download, please build the source by yourself.
 
+- if you want to run it on Android devices, please use `termux`, and run 
+
+  `pkg install proot resolv-conf && proot -b $PREFIX/etc/resolv.conf:/etc/resolv.conf` 
+  
+
 ## Notice
 
 - This tool is for learning only. Please delete it from your computer within 24 hours after downloading.
