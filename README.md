@@ -13,7 +13,7 @@
 - Download books as txt and epub files ([epub3.0](http://idpf.org/epub/30/))
 - Download vip chapters
 - Multi-threads support
-- Cache iamages in chapters
+- Cache images in chapters
 
 ## Usage
 
