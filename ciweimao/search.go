@@ -35,7 +35,7 @@ func Search(bookName string, page int, bookType string) {
 
 func enterCmd(bookName string, page int, bookList []structure.BookList, bookType string) {
 	var input string
-	fmt.Printf("enter the number to download, n to next page, and p to previous page: ")
+	fmt.Printf("enter the number to download, n to next page, p to previous page, and e to exit: ")
 	fmt.Scanln(&input)
 	fmt.Println("")
 	switch input {
@@ -57,6 +57,8 @@ func enterCmd(bookName string, page int, bookList []structure.BookList, bookType
 		fmt.Printf("search result:")
 		fmt.Println("")
 		Search(bookName, page-1, bookType)
+	case "e":
+		fmt.Println("exited.")
 	default:
 		bidNum, err := strconv.Atoi(input)
 		if err != nil {
