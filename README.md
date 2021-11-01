@@ -1,4 +1,3 @@
-
 <h1 align="center">
   <img src="./assets/cirno.png" alt="Cirno" width="150">
   <br>Cirno-go<br>
@@ -7,6 +6,8 @@
 <h4 align="center">A tool for downloading books from <a href="https://www.ciweimao.com">hbooker</a> in Go.</h4>
 
 ## Features
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fzsakvo%2FCirno-go.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Fzsakvo%2FCirno-go?ref=badge_shield)
+
 
 - Login your own account
 - Search books by book name
@@ -62,3 +63,6 @@ No pre-build binaries to download, please build the source by yourself.
 - Please respect the copyright and do not spread the crawled books by yourself.
 
  
+
+## License
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fzsakvo%2FCirno-go.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2Fzsakvo%2FCirno-go?ref=badge_large)
