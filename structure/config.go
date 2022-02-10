@@ -15,6 +15,7 @@ type App struct {
 	AppVersion  string `mapstructure:"app_version"`
 	UserAgent   string `mapstructure:"user_agent"`
 	DefaultKey  string `mapstructure:"default_key"`
+	HostUrl     string `mapstructure:"host_url"`
 }
 
 type Web struct {

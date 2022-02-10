@@ -38,6 +38,7 @@
     account: 
     login_token: 
     user_name: 
+    host_url:  # you can use another official api https://app.happybooker.cn if you can't visit the default one.
 
   extra:
     cpic: true  #set true to cache images automatically.

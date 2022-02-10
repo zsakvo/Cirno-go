@@ -37,7 +37,7 @@ func Get(url string, paras req.Param) ([]byte, error) {
 		client = req.New()
 	}
 	client.SetTimeout(20 * time.Second)
-	r, err = client.Get("https://app.hbooker.com"+url, param, req.Header{"User-Agent": cfg.App.UserAgent})
+	r, err = client.Get(cfg.App.HostUrl+url, param, req.Header{"User-Agent": cfg.App.UserAgent})
 	if err != nil {
 		return nil, err
 	}

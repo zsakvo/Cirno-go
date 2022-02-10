@@ -23,6 +23,7 @@ func InitConfig(hasConfig bool) {
 		viper.SetDefault("app.device_token", "ciweimao_client")
 		viper.SetDefault("app.user_agent", "Android com.kuangxiangciweimao.novel")
 		viper.SetDefault("app.default_key", "zG2nSeEfSHfvTCHy5LCcqtBbQehKNLXn")
+		viper.SetDefault("app.host_url", "https://app.hbooker.com")
 		viper.SetDefault("extra.coroutines", 3)
 		viper.SetDefault("extra.cpic", false)
 		viper.SetDefault("extra.cache_no_paid", false)
@@ -42,6 +43,7 @@ func InitConfig(hasConfig bool) {
 				DeviceToken: "ciweimao_client",
 				UserAgent:   "Android com.kuangxiangciweimao.novel",
 				DefaultKey:  "zG2nSeEfSHfvTCHy5LCcqtBbQehKNLXn",
+				HostUrl:     "http://app.hbooker.com",
 			},
 		}
 	}
