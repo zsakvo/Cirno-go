@@ -8,16 +8,25 @@
 
 ## Features
 
-- Login your own account
+- ~~Login your own account~~
 - Search books by book name
 - Download books as txt and epub files ([epub3.0](http://idpf.org/epub/30/))
 - Download vip chapters
 - Multi-threads support
 - Cache images in chapters
 
+## ⚠️ Notice
+
+- Now, a third-party captcha([geetest](https://www.geetest.com/)) has been add to the official server. If you login failed with the right account and password, please capture packets of the app to get the token and account, then, locate to `$HOME/cirno` dir, create a file named `config.yaml`:
+```yaml
+app:
+  account: 
+  login_token: 
+```
+
 ## Usage
 
-- `cirno login` to Log in to your account.
+- ~~`cirno login` to Log in to your account.~~
 - `cirno search xxxx` to search books.
 - `cirno download bid` to download books.
 - You can add `--type` flag to specify the books type, support `txt` and `epub`, default value is `txt`.

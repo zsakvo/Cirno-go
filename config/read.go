@@ -19,9 +19,9 @@ func InitConfig(hasConfig bool) {
 		viper.SetConfigName("config")
 		viper.AddConfigPath(expandedDir + "/Cirno")
 		viper.SetConfigType("yaml")
-		viper.SetDefault("app.app_version", "2.7.017")
-		viper.SetDefault("app.device_token", "ciweimao_client")
-		viper.SetDefault("app.user_agent", "Android com.kuangxiangciweimao.novel")
+		viper.SetDefault("app.app_version", "2.9.290")
+		viper.SetDefault("app.device_token", "ciweimao_")
+		viper.SetDefault("app.user_agent", "Android com.kuangxiangciweimao.novel 2.9.290,Pixel,6A,32")
 		viper.SetDefault("app.default_key", "zG2nSeEfSHfvTCHy5LCcqtBbQehKNLXn")
 		viper.SetDefault("app.host_url", "https://app.hbooker.com")
 		viper.SetDefault("extra.coroutines", 3)
@@ -39,9 +39,9 @@ func InitConfig(hasConfig bool) {
 	} else {
 		Config = structure.ConfigStruct{
 			App: structure.App{
-				AppVersion:  "2.7.017",
-				DeviceToken: "ciweimao_client",
-				UserAgent:   "Android com.kuangxiangciweimao.novel",
+				AppVersion:  "2.9.290",
+				DeviceToken: "ciweimao_",
+				UserAgent:   "Android com.kuangxiangciweimao.novel 2.9.290,Pixel,6A,32",
 				DefaultKey:  "zG2nSeEfSHfvTCHy5LCcqtBbQehKNLXn",
 				HostUrl:     "http://app.hbooker.com",
 			},
