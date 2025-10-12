@@ -53,12 +53,13 @@ func CompressEpub(tmp, dst string) error {
 			return
 		}
 
-		// 替换文件信息中的文件名
-		if path == tmp {
+		// 替换文件信息中的文件名 //fix win环境，tmp分隔符混乱导致的问题
+		if filepath.ToSlash(path) == filepath.ToSlash(tmp) {
 			return
 		}
 
-		s := strings.Replace(path, tmp, "", -1)
+		//fix win环境，tmp分隔符混乱导致的问题 C:\Users\debin/Cirno/download/tmp/人在星铁，但宝可梦系统
+		s := strings.Replace(filepath.ToSlash(path), filepath.ToSlash(tmp), "", -1)
 		s = strings.TrimPrefix(s, "/")
 		s = strings.Replace(s, "\\", "/", -1)
 		fh.Name = s
