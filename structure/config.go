@@ -16,6 +16,10 @@ type App struct {
 	UserAgent   string `mapstructure:"user_agent"`
 	DefaultKey  string `mapstructure:"default_key"`
 	HostUrl     string `mapstructure:"host_url"`
+	//入参签名key
+	SignatureKey string `mapstructure:"signature_key"`
+	//http://127.0.0.1:8888
+	ProxyUrl string `mapstructure:"proxy_url"`
 }
 
 type Web struct {

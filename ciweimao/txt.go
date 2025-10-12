@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"strings"
 
 	"github.com/cheggaaa/pb"
 	"github.com/mitchellh/go-homedir"
@@ -91,9 +92,20 @@ func getChapterText(chapters []structure.ChapterList, txt chan chapterStruct, er
 		if err != nil {
 			errc <- chapter
 		} else {
-			text += chapterInfo.ChapterTitle
+			//text += chapterInfo.ChapterTitle
+			//标题需要清除末尾 #PCQ8乱码
+			tmpTitle := chapterInfo.ChapterTitle
+			tmpIndex := strings.Index(tmpTitle, "#PC")
+			if tmpIndex > 0 {
+				tmpTitle = tmpTitle[0:tmpIndex]
+			}
+			text += tmpTitle
 			text += "\n\n"
+
 			text += chapterInfo.TxtContent
+			if len(chapterInfo.AuthorSay) > 0 {
+				text += "\n　　※※※※※※\n"
+			}
 			text += chapterInfo.AuthorSay
 			text += "\n\n\n"
 			txtstr := chapterStruct{text, chapter.ChapterID}

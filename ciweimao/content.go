@@ -26,7 +26,9 @@ func getKey(chapterId string) (string, error) {
 	paras := req.Param{
 		"chapter_id": chapterId,
 	}
-	res, err = util.Get("/chapter/get_chapter_cmd", paras)
+	res, err = util.Post("/chapter/get_chapter_cmd", paras)
+	//todo
+	//res, err = util.Post("/chapter/get_chapter_cmd_s", paras)
 	if err != nil {
 		return "", err
 	}
@@ -46,7 +48,7 @@ func getDecrypt(key, chapterId string) (structure.ChapterInfo, error) {
 		"chapter_id":      chapterId,
 		"chapter_command": key,
 	}
-	res, err = util.Get("/chapter/get_cpt_ifm", paras)
+	res, err = util.Post("/chapter/get_cpt_ifm", paras)
 	if err != nil {
 		fmt.Println(err)
 		return structure.ChapterInfo{}, err

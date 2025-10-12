@@ -19,8 +19,9 @@ func Search(bookName string, page int, bookType string) {
 		"page":           page,
 		"category_index": 0,
 		"key":            bookName,
+		//"use_daguan": "1",
 	}
-	res, err = util.Get("/bookcity/get_filter_search_book_list", paras)
+	res, err = util.Post("/bookcity/get_filter_search_book_list", paras)
 	util.PanicErr(err)
 	var json = jsoniter.ConfigCompatibleWithStandardLibrary
 	var result structure.SearchStruct

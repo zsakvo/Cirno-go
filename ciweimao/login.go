@@ -23,7 +23,7 @@ func Login() {
 		"login_name": name,
 		"passwd":     passwd,
 	}
-	res, err = util.Get("/signup/login", paras)
+	res, err = util.Post("/signup/login", paras)
 	util.PanicErr(err)
 	var json = jsoniter.ConfigCompatibleWithStandardLibrary
 	var result structure.LoginStruct
