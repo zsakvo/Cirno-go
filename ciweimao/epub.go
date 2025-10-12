@@ -116,6 +116,7 @@ func DownloadEpub(bid string) {
 	fmt.Println("writing out files…")
 	epubPath := filepath.Join(tmpPath, "..", epubDetail.BookName+".epub")
 	err = util.CompressEpub(bookPath, epubPath)
+	fmt.Println("CompressEpub files…")
 	util.PanicErr(err)
 	close(epubc)
 	close(epubErrc)
@@ -135,7 +136,15 @@ func getChapterEpub(chapters []structure.ChapterList, epubc chan int, epubErrc c
 			content += chapterInfo.AuthorSay
 			content = strings.Replace(content, "&", "&#38;", -1)
 			contentParas := strings.Split(content, "\n")
-			contentS := contentStruct{chapterInfo.ChapterTitle, contentParas}
+
+			//标题需要清除末尾 #PCQ8乱码
+			tmpTitle := chapterInfo.ChapterTitle
+			tmpIndex := strings.Index(tmpTitle, "#PC")
+			if tmpIndex > 0 {
+				tmpTitle = tmpTitle[0:tmpIndex]
+			}
+
+			contentS := contentStruct{tmpTitle, contentParas}
 			fileName := oebpsPath + "/" + chapter.ChapterID + ".xhtml"
 			var tmpl *template.Template
 			if cpic {
@@ -144,6 +153,7 @@ func getChapterEpub(chapters []structure.ChapterList, epubc chan int, epubErrc c
 				tmpl, _ = template.New("content").Funcs(template.FuncMap{"fixImg": fixImgTag}).Parse(chapterTpl)
 			}
 			file, _ := os.OpenFile(fileName, os.O_CREATE|os.O_WRONLY, 0777)
+			defer file.Close()
 			err := tmpl.Execute(file, contentS)
 			if err != nil {
 				epubErrc <- chapter

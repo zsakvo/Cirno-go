@@ -30,6 +30,8 @@ func init() {
 }
 
 func main() {
+	//os.Args = append(os.Args, "search", "星铁")
+	//os.Args = append(os.Args, "download", "100453787")
 	bookType := "txt"
 	app := &cli.App{
 		Name:  "cirno",

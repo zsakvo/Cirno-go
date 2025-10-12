@@ -19,10 +19,12 @@ func InitConfig(hasConfig bool) {
 		viper.SetConfigName("config")
 		viper.AddConfigPath(expandedDir + "/Cirno")
 		viper.SetConfigType("yaml")
-		viper.SetDefault("app.app_version", "2.9.290")
+		viper.SetDefault("app.app_version", "2.9.329")
 		viper.SetDefault("app.device_token", "ciweimao_")
-		viper.SetDefault("app.user_agent", "Android com.kuangxiangciweimao.novel 2.9.290,Pixel,6A,32")
+		viper.SetDefault("app.user_agent", "Android com.kuangxiangciweimao.novel 2.9.329,Pixel,6A,32")
 		viper.SetDefault("app.default_key", "zG2nSeEfSHfvTCHy5LCcqtBbQehKNLXn")
+		viper.SetDefault("app.signature_key", "a90f3731745f1c30ee77cb13fc00005a")
+		//viper.SetDefault("app.proxy_url", "http://127.0.0.1:8888")
 		viper.SetDefault("app.host_url", "https://app.hbooker.com")
 		viper.SetDefault("extra.coroutines", 3)
 		viper.SetDefault("extra.cpic", false)
@@ -39,11 +41,12 @@ func InitConfig(hasConfig bool) {
 	} else {
 		Config = structure.ConfigStruct{
 			App: structure.App{
-				AppVersion:  "2.9.290",
-				DeviceToken: "ciweimao_",
-				UserAgent:   "Android com.kuangxiangciweimao.novel 2.9.290,Pixel,6A,32",
-				DefaultKey:  "zG2nSeEfSHfvTCHy5LCcqtBbQehKNLXn",
-				HostUrl:     "http://app.hbooker.com",
+				AppVersion:   "2.9.329",
+				DeviceToken:  "ciweimao_",
+				UserAgent:    "Android com.kuangxiangciweimao.novel 2.9.290,Pixel,6A,32",
+				DefaultKey:   "zG2nSeEfSHfvTCHy5LCcqtBbQehKNLXn",
+				SignatureKey: "a90f3731745f1c30ee77cb13fc00005a",
+				HostUrl:      "http://app.hbooker.com",
 			},
 		}
 	}
